@@ -604,18 +604,15 @@ function _mp_whatsappButton(bl, options) {
             _mp_whatsappDialogContent.classList = "_mp_whatsappDialogContent";
             var _mp_whatsappDialogText = document.createElement("span");
             _mp_whatsappDialogText.classList = "_mp_whatsappDialogText";
-            _mp_whatsappDialogText.innerText =
-                "Scan QR code with your phone now to chat via Whatsapp:";
+            _mp_whatsappDialogText.innerText = `Scannez maintenant le code QR avec votre téléphone pour discuter via Whatsapp :`
             var _mp_whatsappQR = document.createElement("div");
             _mp_whatsappQR.classList = "_mp_whatsappQR";
             if (options._mp_w_app_qrcodeurl) {
                 _mp_whatsappQR.innerHTML = `<img src='https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=${options._mp_w_app_qrcodeurl}&chld=H|1' height='200px' style='padding:10px'>`;
                 _mp_whatsappDialogText.innerText =
-                    "Scan QR code:";
+                    "Scannez le code QR:";
             } else {
                 _mp_whatsappQR.innerHTML = `<img src='https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=${_mp_whatsappLink}&chld=H|1' height='200px' style='padding:10px'>`;
-                _mp_whatsappDialogText.innerText =
-                    "Scan QR code with your phone now to chat via Whatsapp:";
             }
             var _mp_whatsappDialogButton = document.createElement("a");
             _mp_whatsappDialogButton.classList = "_mp_whatsappDialogButton";
