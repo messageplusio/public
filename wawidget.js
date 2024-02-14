@@ -12,6 +12,7 @@ async function CreateWhatsappChatWidget(
       welcomeText: 'Hey',
       messageText: 'Hey',
       phoneNumber: '33634674038',
+      qrUrl: '',
     },
     chatButtonSetting: {
       backgroundColor: '#00E785',
@@ -116,10 +117,12 @@ async function CreateWhatsappChatWidget(
                   ${!isMobile ? `Discuter avec nos centres d’admission directement sur WhatsApp en scannant ce QR code` : `Discutez avec nos centres d’admissions sur directement sur WhatsApp en cliquant sur ce bouton`}
                  </div>
  						<div style="display: flex; justify-content: center;">
+            
                  ${!isMobile ? `
-    						<img src="https://cdn.jsdelivr.net/gh/messageplusio/public/qr-code-eureka.jpeg" width="256" height="256" padding=10px>
+    						<img src=${option.brandSetting.qrUrl} width="256" height="256" padding=10px>
 </img>` : ''}
 		</div>
+    
 <div style="display: flex; justify-content: center;">
                  <a
                     role="button"
@@ -142,8 +145,7 @@ async function CreateWhatsappChatWidget(
                                 fill="white" />
                         </svg>
                         
-                        <span class="wa-chat-box-content-send-btn-text">${option.brandSetting.ctaText
-      }</span>
+                        <span class="wa-chat-box-content-send-btn-text">Cliquez ici</span>
                         <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: auto; display: block;">
                           <path d="M1 1L7 7L1 13" stroke="white" stroke-width="2" stroke-linecap="round" />
                         </svg>
