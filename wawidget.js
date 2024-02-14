@@ -250,7 +250,9 @@ async function CreateWhatsappChatWidget(
               color: #000000;
               text-align: center;
               max-width: 480px;
-              margin-top: 32px;
+              margin-top: 16px;
+              margin-left: 12px;
+              margin-right: 12px;
           }
           .wa-chat-box-brand{
               width: 52px;
@@ -276,11 +278,11 @@ async function CreateWhatsappChatWidget(
               border-radius: 32px;
               border: 2px solid ;
               box-shadow: 1px 1px 1px 1px;
-              padding: 4px;
-              min-height: 279px;
+              padding: 2px;
+              min-height: 240px;
               display: flex;
               flex-direction: column;
-              justify-content: space-between;
+              justify-content: center;
               gap: 12px;
 
               pointer-events: none;
@@ -335,6 +337,7 @@ async function CreateWhatsappChatWidget(
               font-size: 12px;
               line-height: 18px;
               color: #999999;
+              margin-bottom: 12px;
           }
           .wa-chat-box-poweredby-link{
               font-weight: 600;
