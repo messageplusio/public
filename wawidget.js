@@ -114,11 +114,12 @@ async function CreateWhatsappChatWidget(
       <div class='wa-chat-box'>
      
                  <div style="padding: 5px" class='wa-chat-box-content-chat-welcome'>
-${!isMobile ? `Discutez avec nos centres d’admission directement sur WhatsApp en scannant ce QR code` : `Discutez avec nos centres d'admission directement sur WhatsApp en cliquant sur ce bouton.`}                 </div>
+                  ${!isMobile ? `Discuter avec nos centres d’admission directement sur WhatsApp en scannant ce QR code :` : `Discutez avec nos centres d’admissions sur directement sur WhatsApp en cliquant sur ce bouton :`}
+                 </div>
  						<div style="display: flex; justify-content: center;">
             
                  ${!isMobile ? `
-    						<img src=${option.brandSetting.qrUrl} width="256" height="256" padding=10px>
+    						<img src=${option.brandSetting.qrUrl} width="128" height="128" padding=4px>
 </img>` : ''}
 		</div>
     
@@ -152,7 +153,7 @@ ${!isMobile ? `Discutez avec nos centres d’admission directement sur WhatsApp 
               </div>
 
                 <div class='wa-chat-box-poweredby'>
-                    <a href="https://messageplus.io" class="wa-chat-box-poweredby-link">Powered by Message Plus</a>
+                    Powered by <a href="https://messageplus.io" class="wa-chat-box-poweredby-link">Message Plus</a>
                 </div>
                           
 
@@ -233,7 +234,7 @@ ${!isMobile ? `Discutez avec nos centres d’admission directement sur WhatsApp 
               align-items: center;
               gap: 14px;
               padding: 16px 20px 16px 20px;
-              max-width: 512px;
+              max-width: 256px;
 
               border-width: initial;b
               border-style: none;
@@ -244,9 +245,12 @@ ${!isMobile ? `Discutez avec nos centres d’admission directement sur WhatsApp 
           }
           .wa-chat-box-content-chat-welcome{        
               font-family: 'Outfit', sans-serif !important;
-              font-size: 20px;
+              font-size: 16px;
               line-height: 150%;
               color: #000000;
+              text-align: center;
+              max-width: 480px;
+              margin-top: 32px;
           }
           .wa-chat-box-brand{
               width: 52px;
@@ -259,8 +263,8 @@ ${!isMobile ? `Discutez avec nos centres d’admission directement sur WhatsApp 
           .wa-chat-box{
               background-color: white;
               z-index: 16000160 !important;
-              margin-bottom: 132px;
-              margin-bottom: 92px;
+              margin-bottom: 108px;
+              margin-bottom: 72px;
               min-width: 320px;
               max-width: 640px;
               position: fixed !important;
@@ -330,15 +334,15 @@ ${!isMobile ? `Discutez avec nos centres d’admission directement sur WhatsApp 
               font-family: 'Outfit', sans-serif !important;
               font-size: 12px;
               line-height: 18px;
-              color: #25D366;
+              color: #999999;
           }
           .wa-chat-box-poweredby-link{
-              font-weight: bold;
-              color: #0000EE !important;
+              font-weight: 600;
+              color: #666666 !important;
               text-decoration: none !important;
           }
           .wa-chat-box-poweredby-link::hover{
-              color: #0000EE !important;
+              color: #666666 !important;
               text-decoration: none !important;
           }
   
@@ -423,8 +427,3 @@ ${!isMobile ? `Discutez avec nos centres d’admission directement sur WhatsApp 
               }
           }
       `;
-
-  var styleSheet = document.createElement('style');
-  styleSheet.innerText = styles;
-  document.getElementsByTagName('head')[0].appendChild(styleSheet);
-}
