@@ -431,3 +431,4 @@ async function CreateWhatsappChatWidget(
   var styleSheet = document.createElement('style');
   styleSheet.innerText = styles;
   document.getElementsByTagName('head')[0].appendChild(styleSheet);
+}
