@@ -64,7 +64,7 @@ async function CreateWhatsappChatWidget(
 
   initWidget();
   function initWidget() {
-    const isMobile = window.innerWidth <= 400; //TODO change to 768
+    const isMobile = window.innerWidth <= 768;
     if (option.brandSetting.messageText) {
       option.brandSetting.messageText = option.brandSetting.messageText.replaceAll(
         '{{page_link}}',
@@ -151,7 +151,7 @@ async function CreateWhatsappChatWidget(
               </div>
 
                 <div class='wa-chat-box-poweredby'>
-                    <a href="https://www.messageplus.io" class="wa-chat-box-poweredby-link">Powered by Message Plus</a>
+                    <a href="https://messageplus.io" class="wa-chat-box-poweredby-link">Powered by Message Plus</a>
                 </div>
                           
 
