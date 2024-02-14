@@ -1,1135 +1,429 @@
-window.widget = {
-    init: _mp_createWidget,
-};
+async function CreateWhatsappChatWidget(
+  option = {
+    brandSetting: {
+      autoShow: true,
+      backgroundColor: '#0a6114',
+      borderRadius: '25',
+      brandImg: 'https://messageplus.io/_nuxt/img/m+.a50bf51.jpeg',
+      brandImgData: null,
+      brandName: 'Message Plus',
+      brandSubTitle: '',
+      ctaText: 'Cliquer ici',
+      welcomeText: 'Hey',
+      messageText: 'Hey',
+      phoneNumber: '33634674038',
+    },
+    chatButtonSetting: {
+      backgroundColor: '#00E785',
+      borderRadius: '25',
+      ctaText: 'Cliquer ici',
+      ctaIconMP: true,
+      marginLeft: '0',
+      marginRight: '20',
+      marginBottom: '20',
+      position: 'right',
+    },
+    enabled: false,
+  }
+) {
+  if (option.enabled == false) {
+    return;
+  }
+  if (!option.chatButtonSetting.position) {
+    option.chatButtonSetting.position = 'right';
+    option.chatButtonSetting.marginBottom = '20';
+    option.chatButtonSetting.marginLeft = '0';
+    option.chatButtonSetting.marginRight = '20';
+  }
+  var css = document.createElement('STYLE');
+  var defaultSvg = option.chatButtonSetting.ctaIconMP
+    ? `<svg id="wa-widget-svg" width="28" height="26" viewBox="0 0 28 26" fill="none" style="pointer-events: none"
+          xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_152_73)">
+              <path d="M8.12905 20.1329H16.3847L21.3186 25.0623V20.1329H23.4264C25.9412 20.1329 27.9979 18.0762 27.9979 15.5615V9.06899C27.9979 6.55426 25.9412 4.49756 23.4264 4.49756H8.12905C5.61432 4.49756 3.55762 6.55426 3.55762 9.06899V15.5615C3.55762 18.0762 5.61432 20.1329 8.12905 20.1329Z" fill="white"/>
+              <path d="M18.6548 23.6548L13.3496 18.3541H5.46081C2.45025 18.3541 0 15.9038 0 12.8933V6.39856C0 3.38799 2.45025 0.937744 5.46081 0.937744H20.7582C23.7688 0.937744 26.219 3.38799 26.219 6.39856V12.8911C26.219 15.9016 23.7688 18.3519 20.7582 18.3519H18.6504V16.5731H20.7582C22.7882 16.5731 24.4402 14.9211 24.4402 12.8911V6.39856C24.4402 4.36854 22.7882 2.71651 20.7582 2.71651H5.46081C3.43079 2.71651 1.77877 4.36854 1.77877 6.39856V12.8911C1.77877 14.9211 3.43079 16.5731 5.46081 16.5731H14.0856L18.6704 21.1534L18.6548 23.6526V23.6548Z" fill="#1D1D1B"/>
+          </g>
+          <defs>
+              <clipPath id="clip0_152_73">
+                  <rect width="28" height="24.1245" fill="white" transform="translate(0 0.937744)"/>
+              </clipPath>
+          </defs>
+      </svg>`
+    : `<svg id="wa-widget-svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="pointer-events: none">
+          <g clip-path="url(#clip0_1029_374)">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M23.7881 4.06584C21.1709 1.44525 17.69 0.00132957 13.9811 0C6.33875 0 0.118997 6.21909 0.116338 13.8635C0.115008 16.3072 0.75387 18.6925 1.96711 20.7946L0 27.9796L7.34989 26.0517C9.37482 27.1566 11.655 27.7383 13.9752 27.739H13.9811C21.6222 27.739 27.8427 21.5192 27.8453 13.8748C27.8466 10.17 26.406 6.6871 23.7881 4.06651V4.06584ZM13.9811 25.3975H13.9765C11.909 25.3969 9.88075 24.8411 8.1111 23.7914L7.69027 23.5415L3.3286 24.6856L4.49264 20.4329L4.21874 19.9968C3.06533 18.162 2.45572 16.0413 2.45705 13.8642C2.45971 7.51078 7.6291 2.34138 13.9858 2.34138C17.0638 2.34271 19.957 3.54266 22.1328 5.72117C24.3086 7.89902 25.5059 10.7949 25.5046 13.8735C25.5019 20.2275 20.3326 25.3969 13.9811 25.3969V25.3975ZM20.3019 16.7673C19.9556 16.5938 18.2524 15.7561 17.9346 15.6405C17.6169 15.5248 17.3862 15.467 17.1555 15.814C16.9248 16.161 16.2607 16.9415 16.0586 17.1721C15.8565 17.4035 15.6544 17.4321 15.308 17.2585C14.9617 17.085 13.8455 16.7194 12.522 15.5394C11.4922 14.6206 10.7968 13.4866 10.5948 13.1395C10.3926 12.7925 10.5735 12.605 10.7463 12.4329C10.9018 12.2773 11.0926 12.028 11.2661 11.8259C11.4397 11.6238 11.4969 11.4789 11.6125 11.2482C11.7282 11.0168 11.6704 10.8148 11.584 10.6412C11.4975 10.4677 10.8048 8.76253 10.5156 8.06918C10.2344 7.39377 9.94858 7.48551 9.7365 7.47421C9.53439 7.46424 9.30373 7.46225 9.07239 7.46225C8.84104 7.46225 8.46605 7.54867 8.14831 7.89569C7.83056 8.24267 6.93573 9.08097 6.93573 10.7855C6.93573 12.49 8.17693 14.1381 8.35042 14.3694C8.52391 14.6008 10.7935 18.0995 14.2683 19.6006C15.0947 19.9576 15.7402 20.171 16.2434 20.3306C17.0731 20.5945 17.8283 20.5573 18.4252 20.4682C19.0907 20.3685 20.4748 19.6299 20.7633 18.8208C21.0518 18.0117 21.0518 17.3177 20.9654 17.1734C20.879 17.0292 20.6477 16.9421 20.3013 16.7686L20.3019 16.7673Z"
+                  fill="white" />
+          </g>
+          <defs>
+              <clipPath id="clip0_1029_374">
+                  <rect width="27.8453" height="28" fill="white" />
+              </clipPath>
+          </defs>
+      </svg>`;
 
-function removeWidgetIfAny(_mp_options) {
-    if (!!document.getElementById(`_mp_${_mp_options._mp_randomID}_modal`)) {
-        document.getElementById(`_mp_${n._mp_randomID}_modal`).remove();
+  initWidget();
+  function initWidget() {
+    const isMobile = window.innerWidth <= 400; //TODO change to 768
+    if (option.brandSetting.messageText) {
+      option.brandSetting.messageText = option.brandSetting.messageText.replaceAll(
+        '{{page_link}}',
+        encodeURIComponent(window.location.href)
+      );
+      option.brandSetting.messageText = option.brandSetting.messageText.replaceAll(
+        '__page_link__',
+        encodeURIComponent(window.location.href)
+      );
+      option.brandSetting.messageText = option.brandSetting.messageText.replaceAll(
+        '{{page_title}}',
+        window.document.title
+      );
+      option.brandSetting.messageText = option.brandSetting.messageText.replaceAll(
+        '__page_title__',
+        window.document.title
+      );
+      option.brandSetting.messageText = option.brandSetting.messageText.replaceAll('\n', '%0A');
     }
-    if (!!document.getElementById(`${_mp_options._mp_randomID}_modal`)) {
-        document.getElementById(`${_mp_options._mp_randomID}_modal`).remove();
-    }
-    if (!!document.querySelector(`._mp_widget_div`)) {
-        document.querySelector(`._mp_widget_div`).remove();
-    }
-    if (!!document.querySelector(`.greetingModal`)) {
-        document.querySelector(`.greetingModal`).remove();
-    }
-}
 
-function _mp_createWidget(_mp_options) {
-    removeWidgetIfAny(_mp_options);
-    _mp_missingElements(_mp_options);
-    if (screen.width <= 820) {
-        _mp_getMobileView(_mp_options);
-    }
-
-    var _mp_styles = document.createElement("style");
-    _mp_styles.innerText = `
-  ._mp_channel_btn {
-    cursor: pointer;
-    margin-right: 4px !important;
-    color: ${_mp_options._mp_greeting_message_color};
-    z-index: 999999;
-  }
-  #_mp_greeting_message_box_info p {
-    color: ${_mp_options._mp_greeting_message_color}
-  } 
-  ._mp_channel_btn:hover {
-    animation: shake 0.3s;
-    animation-iteration-count: 1;
-  }
-  ._mp_hide_btn {
-    display:none;
-  }
-  @keyframes shake {
-    0% {transform: rotate(-15deg);}
-    25% {transform: rotate(30deg);}
-    50% {transform: rotate(-30deg);}
-    75% {transform: rotate(15deg);}
-    100% {transform: rotate(0deg);}
-  }
-  ._mp_whatsappDialogWrapper {
-    align-items: center !important;
-    background-color: rgb(0 0 0 / 50%) !important;
-    bottom: 0 !important;
-    display: flex !important;
-    height: 100% !important;
-    justify-content: center !important;
-    left: 0 !important;
-    position: fixed !important;
-    right: 0 !important;
-    top: 0 !important;
-    width: 100% !important;
-    z-index: 10002 !important;
-  }
-  ._mp_whatsappDialogContent {
-    align-items: center !important;
-    background: #ffffff;
-    box-sizing: content-box !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: 400px !important;
-    justify-content: space-evenly !important;
-    padding: 32px !important;
-    width: 400px !important;
-  }
-  ._mp_whatsappDialogContent > span {
-    margin-bottom: 24px !important;
-    font-family: Mulish, sans-serif !important;
-    color: #000000 !important;
-    font-size: 18px !important;
-    line-height: 1.2 !important;
-    text-align: center !important;
-  }
-
-  ._mp_whatsappQR > img {
-    height: 200px !important;
-    width: 200px !important;
-  }
-
-  ._mp_whatsappDialogButton { 
-    align-items: center !important;
-    background: #4caf50 !important;
-    border-radius: 30px !important;
-    box-sizing: content-box !important;
-    color: #ffffff !important;
-    display: flex !important;
-    height: 32px !important;
-    margin-top: 32px !important;
-    padding: 5px 16px !important;
-    text-decoration: none !important;
-    width: 180px !important;
-  }
-  ._mp_whatsappDialogButtonText {
-    padding: 0px 10px;
-    font-family: Mulish, sans-serif !important;
-  }
-  `;
-    document.head.appendChild(_mp_styles);
-
-    var _mp_font = document.createElement("link");
-    _mp_font.setAttribute(
-        "href",
-        "https://fonts.googleapis.com/css2?family=Mulish:wght@400;600&display=swap"
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      `<div id="whatsapp-chat-widget">
+                <div class="wa-widget-send-button">
+                    ${defaultSvg}
+                    <svg id="wa-widget-opened-svg" width="23" height="13" viewBox="0 0 23 13" fill="none" style="pointer-events: none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.20001 1.7334L11.6154 11.1488L21.0308 1.7334" stroke="#363636" stroke-width="2" stroke-linecap="square"/>
+                    </svg>
+                </div>
+            </div>`
     );
-
-    _mp_options._mp_modal_open = false;
-
-    switch (_mp_options._mp_display_btn) {
-        case "mobile":
-            var _mp_maxWidth = 1000;
-            var _mp_minWidth = 0;
-            break;
-        case "desktop":
-            var _mp_maxWidth = Infinity;
-            var _mp_minWidth = 1000;
-            break;
-        case "everywhere":
-            var _mp_maxWidth = Infinity;
-            var _mp_minWidth = 0;
-            break;
-        default:
-            var _mp_maxWidth = 1000;
-            break;
-    }
-
-    if (screen.width <= _mp_maxWidth && screen.width >= _mp_minWidth) {
-        _mp_getButtonSize(_mp_options);
-        _mp_getButtonSizeMobile(_mp_options);
-
-        const order = _mp_options._mp_order.split(",");
-
-        if (order.length > 1) {
-            window.orderMulti = true;
-        } else {
-            window.orderMulti = false;
-        }
-
-
-        if (window.innerWidth <= 820) {
-
-            var d = document.createElement("div");
-            d.id = `_mp_${_mp_options._mp_randomID}_modal`; // replace with id var
-            d.style = `${_mp_zero_v_placement}: 4vw; ${_mp_options._mp_pos_val}: 5vw; opacity: 1; transition: opacity 0.5s ease 0s; box-sizing: border-box; direction: ltr; position: fixed !important; z-index: 16000160 !important; width: ${_mp_mobile_btn_viewport};`;
-            d.classList = "_mp_widget_div";
-
-        } else {
-
-
-            var d = document.createElement("div");
-            d.id = `_mp_${_mp_options._mp_randomID}_modal`; // replace with id var
-            d.style = `${_mp_zero_v_placement}: ${_mp_options._mp_v_pos}; ${_mp_options._mp_pos_val}: ${_mp_options._mp_h_pos}; opacity: 1; transition: opacity 0.5s ease 0s; box-sizing: border-box; direction: ltr; position: fixed !important; z-index: 16000160 !important; width: ${_mp_widgetSize};`;
-            d.classList = "_mp_widget_div";
-
-        }
-
-        if (order.length > 1) {
-            // div element
-            var openList = false;
-
-            if (window.innerWidth <= 820) {
-                var i = _mp_widgetSvg(_mp_mobile_btn_svg, _mp_options);
-                i.style =
-                    "display: block; margin-left: auto; margin-right: auto; cursor: pointer";
-                // compiled button
-                var buttonDiv = document.createElement("div");
-                buttonDiv.id = "_mp_btnDiv";
-                buttonDiv.style =
-                    "display:flex; align-items: center; width:" +
-                    + _mp_mobile_btn_viewport
-                "; height:" +
-                    _mp_mobile_btn_viewport +
-                    "; background-color:" +
-                    n._mp_btn_color +
-                    "; border-radius: 50%; position: relative !important;";
-                buttonDiv.appendChild(i);
-
-            } else {
-
-                var i = _mp_widgetSvg(_mp_widgetSvgSize, _mp_options);
-                i.style =
-                    "display: block; margin-left: auto; margin-right: auto; cursor: pointer";
-                // compiled button
-                var buttonDiv = document.createElement("div");
-                buttonDiv.id = "_mp_btnDiv";
-                buttonDiv.style =
-                    "display:flex; align-items: center; width:" +
-                    _mp_widgetSize +
-                    "; height:" +
-                    _mp_widgetSize +
-                    "; background-color:" +
-                    n._mp_btn_color +
-                    "; border-radius: 50%; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; position: relative !important;";
-                buttonDiv.appendChild(i);
-
-            }
-
-            // button functionality
-            if (screen.width <= 820) {
-                d.addEventListener("touchstart", (e) => {
-                    if (_mp_options._mp_modal_open == false) {
-                        _mp_expandButton(d, order, buttonDiv, _mp_options);
-                        document.querySelector("._mp_close").style = "display:none";
-                        document.querySelector("._mp_open").style = "display:block";
-                        _mp_options._mp_modal_open = true;
-                    } else if (_mp_options._mp_modal_open == true) {
-                        if (_mp_options._mp_greeting == "yes") {
-                            _mp_collapseButton(d, _mp_options, buttonDiv);
-                        } else {
-                            _mp_widget_close_button_list(d);
-                        }
-                        document.querySelector("._mp_close").style = "display:none";
-                        document.querySelector("._mp_open").style = "display:block";
-                        _mp_options._mp_modal_open = false;
-                    }
-                });
-            } else {
-                d.addEventListener("mouseenter", (e) => {
-                    e.stopPropagation();
-                    if (_mp_options._mp_modal_open == false) {
-                        _mp_expandButton(d, order, buttonDiv, _mp_options);
-                        if (!!document.querySelector("._mp_whatsappDialogWrapper")) {
-                            document.querySelector("._mp_whatsappDialogWrapper").remove();
-                        }
-                        document.querySelector("._mp_close").style = "display:block";
-                        document.querySelector("._mp_open").style = "display:none";
-                        _mp_options._mp_modal_open = true;
-                    }
-                    d.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        if (_mp_options._mp_modal_open == true) {
-                            if (_mp_options._mp_greeting == "yes") {
-                                _mp_collapseButton(d, _mp_options, buttonDiv);
-                            } else {
-                                _mp_widget_close_button_list(d);
-                            }
-
-                            document.querySelector("._mp_close").style = "display:none";
-                            document.querySelector("._mp_open").style = "display:block";
-                            openList = false;
-                            _mp_options._mp_modal_open = false;
-                        }
-                        d.addEventListener("click", (e) => {
-                            e.stopPropagation();
-                            if (_mp_options._mp_modal_open == false) {
-                                _mp_expandButton(d, order, buttonDiv, _mp_options);
-                                document.querySelector("._mp_close").style = "display:block";
-                                document.querySelector("._mp_open").style = "display:none";
-                                _mp_options._mp_modal_open = true;
-                            }
-                        });
-                    });
-                });
-            }
-            d.appendChild(buttonDiv);
-            if (_mp_options._mp_greeting == "yes" && screen.width > 820) {
-                greetingTimeout = setTimeout(
-                    _mp_createGreetingModal(_mp_options, buttonDiv),
-                    5000
-                );
-                _mp_options._mp_modal_open = true;
-            }
-        } else {
-            var openList = false;
-            if (window.innerWidth <= 820) {
-                var buttonDiv = document.createElement("div");
-                buttonDiv.id = "_mp_btnDiv";
-                buttonDiv.style =
-                    "display:flex; align-items: center; width:" +
-                    _mp_mobile_btn_viewport +
-                    "; height:" +
-                    _mp_mobile_btn_viewport +
-                    "; border-radius: 50%; position: relative !important;";
-                d.appendChild(buttonDiv);
-            } else {
-                var buttonDiv = document.createElement("div");
-                buttonDiv.id = "_mp_btnDiv";
-                buttonDiv.style =
-                    "display:flex; align-items: center; width:" +
-                    _mp_widgetSize +
-                    "; height:" +
-                    _mp_widgetSize +
-                    "; border-radius: 50%; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; position: relative !important;";
-                d.appendChild(buttonDiv);
-
-            }
-            if (_mp_options._mp_greeting == "yes" && screen.width > 820) {
-                greetingTimeout = setTimeout(
-                    _mp_createGreetingModal(_mp_options, buttonDiv),
-                    5000
-                );
-                _mp_options._mp_modal_open = true;
-            }
-            if (_mp_options._mp_greeting == "yes") {
-                _mp_createButtons(buttonDiv, order, _mp_options);
-            } else {
-                _mp_createButtons(buttonDiv, order, _mp_options);
-            }
-            d.addEventListener("mouseenter", (e) => {
-                e.stopPropagation();
-                if (!!document.querySelector("._mp_whatsappDialogWrapper")) {
-                    document.querySelector("._mp_whatsappDialogWrapper").remove();
-                }
-                if (_mp_options._mp_modal_open == false) {
-                    _mp_expandButton(d, order, buttonDiv, _mp_options);
-                    // document.querySelector(".close").style = "display:block";
-                    // document.querySelector(".open").style = "display:none";
-                    openList = true;
-                    _mp_options._mp_modal_open = false;
-                }
-            });
-            d.addEventListener("click", () => {
-                _mp_collapseButton(d, _mp_options, buttonDiv);
-                _mp_options._mp_modal_open = false;
-            });
-        }
-
-        window.addEventListener("scroll", (e) => {
-            e.stopPropagation();
-            if (_mp_options._mp_modal_open == true) {
-                if (_mp_options._mp_greeting == "yes") {
-                    _mp_collapseButton(d, _mp_options, buttonDiv);
-                } else {
-                    _mp_widget_close_button_list(d);
-                }
-
-                document.querySelector("._mp_close").style = "display:none";
-                document.querySelector("._mp_open").style = "display:block";
-                openList = false;
-                _mp_options._mp_modal_open = false;
-            }
-        });
-
-        d.appendChild(_mp_font);
-        document.body.appendChild(d);
-    }
-}
-
-function _mp_expandButton(d, order, buttonDiv, options) {
-    if (options._mp_greeting == "yes") {
-        if (!!!document.getElementById(`${options._mp_randomID}_modal`)) {
-            _mp_createGreetingModal(options, d);
-        }
-        // document.querySelector("._mp_whatsappDialogWrapper").remove();
-    } else {
-        if (order.length > 1) {
-            var buttonList = document.createElement("div");
-            buttonList.style = "display: flex; flex-direction:column;";
-            buttonList.classList = "_mp_buttonList";
-            _mp_createButtons(buttonList, order, options);
-            d.insertBefore(buttonList, buttonDiv);
-        }
-    }
-}
-
-// collapses the button list
-function _mp_collapseButton(d, options, buttonDiv) {
-    if (!!document.getElementById(`${options._mp_randomID}_modal`)) {
-        _mp_click_outside(options);
-        !!document.getElementById(`${options._mp_randomID}_modal`)
-            ? _mp_click_outside(options)
-            : null;
-    } else {
-        if (options._mp_order.split(",").length > 1) {
-            _mp_widget_close_button(d);
-        }
-        _mp_click_outside(options);
-        !!document.getElementById(`${options._mp_randomID}_modal`)
-            ? _mp_click_outside(options)
-            : null;
-    }
-    !!document.querySelector("._mp_close")
-        ? (document.querySelector("._mp_close").style = "display:none")
-        : null;
-    !!document.querySelector("._mp_open")
-        ? (document.querySelector("._mp_open").style = "display:block")
-        : null;
-    options._mp_modal_open = false;
-}
-
-// checks which buttons exist in list and creates as per order
-function _mp_createButtons(bl, order, options) {
-    order.forEach(() => _mp_whatsappButton(bl, options))
-}
-
-function _mp_createGreetingModal(options, d) {
-    var closeBtnDiv = document.createElement("div");
-    var closeBtn = document.createElement("div");
-    var testDiv = document.createElement("div");
-    closeBtnDiv.style =
-        "width: auto; margin-top: 10px; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; background: #fff;";
-    closeBtn.style = "";
-    closeBtn.innerHTML =
-        "<p class='closeBtnX' style='font-family: Sans-Serif; cursor: pointer; font-size: 11px; padding-top: 0.5px; padding-bottom: 0.5px; padding-left: 3px; padding-right: 3px; margin-bottom: 0px;'>X</p>";
-    testDiv.style =
-        "display:flex; justify-content:flex-end; height:10px; align-items:center; margin-bottom:10px; background-color:#fff;";
-
-    var _mp_greeting_message_box = document.createElement("div");
-    _mp_greeting_message_box.id = "_mp_greeting_message_box";
-    var _mp_greeting_message_box_info = document.createElement("div");
-    _mp_greeting_message_box_info.id = "_mp_greeting_message_box_info";
-    var _mp_greeting_message_modal = _mp_greetingMessageModal(options);
-    _mp_greeting_message_modal.style = "display: flex";
-    _mp_greeting_message_box.id = `${options._mp_randomID}_modal`;
-    _mp_greeting_message_box.classList.add("greetingModal");
-    document.getElementsByClassName("greetingModal").style =
-        "width: 250px !important; height:122px;";
-    if (options._mp_company_logo && options._mp_greeting_message == undefined) {
-        var _mp_logo = document.createElement("img");
-        _mp_logo.setAttribute("src", options._mp_company_logo);
-        _mp_logo.style =
-            "width: 48px; height: 48px; max-width:48px; margin-right: 10px; border-radius: 6px;";
-        _mp_greeting_message_box.style = `position: absolute; bottom: ${options._mp_horizontal_position};
-      ${options._mp_pos_val} 
-      : ${options._mp_vertical_position}; margin:5px; background:#fff; opacity:100%; z-index:9999; padding: 10px; border: 1px solid #d4d4d4; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; overflow: hidden; border-radius: 7px;width:auto !important`;
-        _mp_greeting_message_box_info.style =
-            "height: auto; bottom:50%; right: 100%; padding: 5px;";
-        _mp_greeting_message_box_info.innerHTML =
-            "<p style='text-decoration:none; font-size:14px !important; font-family: Mulish, sans-serif !important; width: 100%; min-width:150px; border: 1px #d4d4d4 solid; display: inline-block; text-align: left; margin-bottom: 1rem; border-radius: 6px; padding: 10px; overflow-wrap: normal; text-overflow: ellipsis;'>Your Greeting Message Goes Here!</p>";
-        _mp_greeting_message_box_info.style =
-            "font-family: Mulish, sans-serif !important;";
-        _mp_greeting_message_modal.appendChild(_mp_logo);
-        if (options._mp_order.split(",").length > 1) {
-            var channelList = createGreetingMessageChannels(options);
-            channelList.style = "display: flex; width: auto;";
-            _mp_greeting_message_box_info.appendChild(channelList);
-        }
-        // new stuff
-        testDiv.appendChild(closeBtn);
-        closeBtnDiv.appendChild(testDiv);
-        closeBtnDiv.addEventListener("click", (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            _mp_close_modal(closeBtnDiv, options);
-            options._mp_modal_open = false;
-        });
-        _mp_greeting_message_box.addEventListener("click", (e) => {
-            if (
-                options._mp_order == "whatsapp" &&
-                e.path[0].classList.value !== "closeBtnX"
-            ) {
-                document.getElementById("_mp_whatsappBtn").click();
-            }
-        });
-        _mp_greeting_message_box.appendChild(testDiv);
-        _mp_greeting_message_modal.appendChild(_mp_greeting_message_box_info);
-        _mp_greeting_message_box.appendChild(_mp_greeting_message_modal);
-        d.appendChild(_mp_greeting_message_box);
-    } else if (
-        options._mp_greeting_message &&
-        options._mp_company_logo == undefined
-    ) {
-        _mp_greeting_message_box.style = `position: absolute; bottom:${options._mp_horizontal_position};
-    ${options._mp_pos_val} 
-    : ${options._mp_vertical_position}; margin:5px; background:#fff; opacity:100%; z-index:9999; padding: 10px; border: 1px solid #d4d4d4; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; overflow: hidden; border-radius: 7px;width:auto !important`;
-        _mp_greeting_message_box_info.style =
-            "height: auto; bottom:50%; right: 100%; padding: 5px;";
-        _mp_greeting_message_box_info.innerHTML =
-            "<p style='text-decoration:none; font-size:14px !important; font-family: Mulish, sans-serif !important; width: 100%; min-width:150px; border: 1px #d4d4d4 solid; display: inline-block; text-align: left; margin-bottom: 1rem; border-radius: 6px; padding: 10px; overflow-wrap: normal; text-overflow: ellipsis;'>" +
-            options._mp_greeting_message +
-            "</p>";
-        _mp_greeting_message_box_info.style =
-            "font-family: Mulish, sans-serif !important;";
-        if (options._mp_order.split(",").length > 1) {
-            var channelList = createGreetingMessageChannels(options);
-            channelList.style = "display: flex; width: auto;";
-            _mp_greeting_message_box_info.appendChild(channelList);
-        }
-        testDiv.appendChild(closeBtn);
-        closeBtnDiv.appendChild(testDiv);
-        closeBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            _mp_close_modal(closeBtnDiv, options);
-            options._mp_modal_open = false;
-        });
-        _mp_greeting_message_box.addEventListener("click", (e) => {
-            if (
-                options._mp_order == "whatsapp" &&
-                e.path[0].classList.value !== "closeBtnX"
-            ) {
-                document.getElementById("_mp_whatsappBtn").click();
-            }
-        });
-        _mp_greeting_message_box.appendChild(testDiv);
-        _mp_greeting_message_modal.appendChild(_mp_greeting_message_box_info);
-        _mp_greeting_message_box.appendChild(_mp_greeting_message_modal);
-        d.appendChild(_mp_greeting_message_box);
-    } else {
-        var _mp_logo = document.createElement("img");
-        _mp_logo.setAttribute("src", options._mp_company_logo);
-        _mp_logo.style =
-            "width: 48px; height: 48px; max-width:48px; margin-right: 10px; border-radius: 6px;";
-        _mp_greeting_message_box.style = `position: absolute; bottom:${options._mp_horizontal_position};
-    ${options._mp_pos_val} 
-    : ${options._mp_vertical_position}; margin:5px; background:#fff; opacity:100%; z-index:9999; padding: 10px; border: 1px solid #d4d4d4; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; overflow: hidden; border-radius: 7px; width:auto !important`;
-        _mp_greeting_message_box_info.style =
-            "height: auto; bottom:50%; right: 100%; padding: 5px;";
-        _mp_greeting_message_box_info.innerHTML =
-            "<p style='text-decoration:none; font-size:14px !important; font-family: Mulish, sans-serif !important; width: 100%; min-width:150px; border: 1px #d4d4d4 solid; display: inline-block; text-align: left; margin-bottom: 1rem; border-radius: 6px; padding: 10px; overflow-wrap: normal; text-overflow: ellipsis;'>" +
-            options._mp_greeting_message +
-            "</p>";
-        _mp_greeting_message_box_info.style =
-            "font-family: Mulish, sans-serif !important;";
-        _mp_greeting_message_modal.appendChild(_mp_logo);
-        if (options._mp_order.split(",").length > 1) {
-            var channelList = createGreetingMessageChannels(options);
-            channelList.style = "display: flex; width: auto;";
-            _mp_greeting_message_box_info.appendChild(channelList);
-        }
-        testDiv.appendChild(closeBtn);
-        closeBtnDiv.appendChild(testDiv);
-        closeBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            _mp_close_modal(closeBtnDiv, options);
-            options._mp_modal_open = false;
-        });
-        _mp_greeting_message_box.addEventListener("click", (e) => {
-            if (
-                options._mp_order == "whatsapp" &&
-                e.path[0].classList.value !== "closeBtnX"
-            ) {
-                document.getElementById("_mp_whatsappBtn").click();
-            }
-        });
-        _mp_greeting_message_box.appendChild(testDiv);
-        _mp_greeting_message_modal.appendChild(_mp_greeting_message_box_info);
-        _mp_greeting_message_box.appendChild(_mp_greeting_message_modal);
-        d.appendChild(_mp_greeting_message_box);
-    }
-}
-
-
-// whatsapp button
-function _mp_whatsappButton(bl, options) {
-    var _mp_button_color = "#4DC247";
-    var _mp_background_button_color = "#fff";
-    _mp_getButtonSize(options);
-    _mp_getButtonSizeMobile(options);
-
-    if (window.innerWidth <= 820) {
-
-        var _mp_whatsappBtn = _mp_createAppButton(
-            _mp_background_button_color,
-            _mp_mobile_btn_viewport
-        );
-        var WAMDialog_flag = false;
-        _mp_whatsappBtn.id = "_mp_whatsappBtn";
-        _mp_whatsappBtn.classList = "_mp_channel_btn";
-        var _mp_whatsappSvgPath =
-            "M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z";
-        var svg = _mp_createSVG(
-            _mp_whatsappSvgPath,
-            _mp_mobile_btn_viewport,
-            _mp_button_color
-        );
-        _mp_whatsappBtn.appendChild(svg);
-
-
-    } else {
-
-
-        var _mp_whatsappBtn = _mp_createAppButton(
-            _mp_background_button_color,
-            _mp_widgetSize
-        );
-        _mp_whatsappBtn.id = "_mp_whatsappBtn";
-        _mp_whatsappBtn.classList = "_mp_channel_btn";
-        var _mp_whatsappSvgPath =
-            "M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z";
-        var svg = _mp_createSVG(
-            _mp_whatsappSvgPath,
-            _mp_widgetSize,
-            _mp_button_color
-        );
-        _mp_whatsappBtn.appendChild(svg);
-
-    }
-
-    var _mp_whatsappNumber = options._mp_whatsapp.replace("+", "");
-    if (options._mp_w_app_filled) {
-        var _mp_whatsappMessage = options._mp_w_app_filled.replace(" ", "%20");
-    } else {
-        var _mp_whatsappMessage = "";
-    }
-    var _mp_whatsappLink =
-        "https://wa.me/" + _mp_whatsappNumber + "?text=" + _mp_whatsappMessage;
-    if (screen.width > 820) {
-        _mp_whatsappBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            _mp_collapseButton(document.querySelector("._mp_buttonList"), options);
-            var _mp_whatsappDialogWrapper = document.createElement("div");
-            _mp_whatsappDialogWrapper.classList = "_mp_whatsappDialogWrapper";
-            var _mp_whatsappDialogContent = document.createElement("div");
-            _mp_whatsappDialogContent.classList = "_mp_whatsappDialogContent";
-            var _mp_whatsappDialogText = document.createElement("span");
-            _mp_whatsappDialogText.classList = "_mp_whatsappDialogText";
-            _mp_whatsappDialogText.innerText = `Discuter avec nos centres d’admission directement sur WhatsApp en scannant ce QR code`
-            var _mp_whatsappQR = document.createElement("div");
-            _mp_whatsappQR.classList = "_mp_whatsappQR";
-            if (options._mp_w_app_qrcodeurl) {
-                _mp_whatsappQR.innerHTML = `<img src='https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=${options._mp_w_app_qrcodeurl}&chld=H|1' height='200px' style='padding:10px'>`;
-                _mp_whatsappDialogText.innerText =
-                    "Scannez le code QR:";
-            } else {
-                _mp_whatsappQR.innerHTML = `<img src='https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=${_mp_whatsappLink}&chld=H|1' height='200px' style='padding:10px'>`;
-            }
-            var _mp_whatsappDialogButton = document.createElement("a");
-            _mp_whatsappDialogButton.classList = "_mp_whatsappDialogButton";
-            _mp_whatsappDialogButton.setAttribute("href", _mp_whatsappLink);
-            _mp_whatsappDialogButton.setAttribute("target", "_blank");
-            var _mp_whatsappDialogButtonText = document.createElement("span");
-            _mp_whatsappDialogButtonText.innerText = "Cliquer ici";
-            _mp_whatsappDialogButtonText.classList = "_mp_whatsappDialogButtonText";
-            var svg = _mp_createSVG(
-                "M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z",
-                "25px",
-                "#fff"
-            );
-
-            _mp_whatsappDialogButton.appendChild(svg);
-            _mp_whatsappDialogButton.appendChild(_mp_whatsappDialogButtonText);
-            _mp_whatsappDialogContent.appendChild(_mp_whatsappDialogText);
-            _mp_whatsappDialogContent.appendChild(_mp_whatsappQR);
-            _mp_whatsappDialogContent.appendChild(_mp_whatsappDialogButton);
-            _mp_whatsappDialogWrapper.appendChild(_mp_whatsappDialogContent);
-            document.body.appendChild(_mp_whatsappDialogWrapper);
-
-            window.addEventListener("click", (e) => {
-                if (e.target == document.querySelector("._mp_whatsappDialogWrapper")) {
-                    document.querySelector("._mp_whatsappDialogWrapper").remove();
-                    _mp_collapseButton(
-                        document.querySelector("._mp_buttonList"),
-                        options
-                    );
-                    // document.querySelectorAll("._mp_buttonList").remove();
-                }
-            });
-        });
-    } else {
-        _mp_whatsappBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            _mp_collapseButton(document.querySelector("._mp_buttonList"), options);
-            var _mp_whatsappDialogWrapper = document.createElement("div");
-            _mp_whatsappDialogWrapper.classList = "_mp_whatsappDialogWrapper";
-            var _mp_whatsappDialogContent = document.createElement("div");
-            _mp_whatsappDialogContent.classList = "_mp_whatsappDialogContent";
-            var _mp_whatsappDialogText = document.createElement("span");
-            _mp_whatsappDialogText.classList = "_mp_whatsappDialogText";
-            _mp_whatsappDialogText.innerText = `Discutez avec nos centres d’admissions sur directement sur WhatsApp en cliquant sur ce bouton`
-            var _mp_whatsappDialogButton = document.createElement("a");
-            _mp_whatsappDialogButton.classList = "_mp_whatsappDialogButton";
-            _mp_whatsappDialogButton.setAttribute("href", _mp_whatsappLink);
-            _mp_whatsappDialogButton.setAttribute("target", "_blank");
-            var _mp_whatsappDialogButtonText = document.createElement("span");
-            _mp_whatsappDialogButtonText.innerText = "Cliquer ici";
-            _mp_whatsappDialogButtonText.classList = "_mp_whatsappDialogButtonText";
-            var svg = _mp_createSVG(
-                "M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z",
-                "25px",
-                "#fff"
-            );
-
-            _mp_whatsappDialogButton.appendChild(svg);
-            _mp_whatsappDialogButton.appendChild(_mp_whatsappDialogButtonText);
-            _mp_whatsappDialogContent.appendChild(_mp_whatsappDialogText);
-            _mp_whatsappDialogContent.appendChild(_mp_whatsappDialogButton);
-            _mp_whatsappDialogWrapper.appendChild(_mp_whatsappDialogContent);
-            document.body.appendChild(_mp_whatsappDialogWrapper);
-
-            window.addEventListener("click", (e) => {
-                if (e.target == document.querySelector("._mp_whatsappDialogWrapper")) {
-                    document.querySelector("._mp_whatsappDialogWrapper").remove();
-                    _mp_collapseButton(
-                        document.querySelector("._mp_buttonList"),
-                        options
-                    );
-                    // document.querySelectorAll("._mp_buttonList").remove();
-                }
-            });
-        });
-    }
-    bl.appendChild(_mp_whatsappBtn);
-}
-
-
-
-function _mp_missingElements(options) {
-    if (!options._mp_pos_val) {
-        options._mp_pos_val = "right";
-    }
-    if (!options._mp_v_pos) {
-        options._mp_v_pos = "2vw";
-    }
-    if (!options._mp_h_pos) {
-        options._mp_h_pos = "1.8vw";
-    }
-    if (!options._mp_btn_color) {
-        options._mp_btn_color = "#fff";
-    }
-    if (!options._mp_bubble_color) {
-        options._mp_bubble_color = "#000";
-    }
-    if (options._mp_pos_val == "manual") {
-        _mp_zero_v_placement = "top";
-        _mp_pos_val = "left";
-    } else {
-        _mp_zero_v_placement = "bottom";
-    }
-    options._mp_horizontal_position = "50%";
-    options._mp_vertical_position = "100%";
-    // options._mp_horizontal_position = 100%
-    // options._mp_vertical_position = 40%
-    return options._mp_pos_val, options._mp_v_pos, options._mp_h_pos;
-}
-
-function _mp_getMobileView(options) {
-    options._mp_btn_size = "mobile";
-    options._mp_ct_action = "";
-    options._mp_horizontal_position = "100%";
-    options._mp_vertical_position = "40%";
-}
-
-
-function _mp_getButtonSize(options) {
-    switch (options._mp_btn_size) {
-        case "big":
-            return (_mp_widgetSize = "6vw"), (_mp_widgetSvgSize = "3.5vw");
-        case "medium":
-            return (_mp_widgetSize = "5vw"), (_mp_widgetSvgSize = "3vw");
-        case "normal":
-            return (_mp_widgetSize = "4vw"), (_mp_widgetSvgSize = "2vw");
-        case "mobile":
-            return (_mp_widgetSize = "5vw"), (_mp_widgetSvgSize = "3vw");
-        default:
-            break;
-    }
-}
-
-function _mp_getButtonSizeMobile(options) {
-    switch (options._mp_btn_size) {
-        case "big":
-            return (_mp_mobile_btn_viewport = "23vw"), (_mp_mobile_btn_svg = "17vw");
-        case "medium":
-            return (_mp_mobile_btn_viewport = "19vw"), (_mp_mobile_btn_svg = "14vw");
-        case "normal":
-            return (_mp_mobile_btn_viewport = "16vw"), (_mp_mobile_btn_svg = "11vw");
-        case "mobile":
-            return (_mp_mobile_btn_viewport = "16vw"), (_mp_mobile_btn_svg = "11vw");
-        default:
-            break;
-    }
-}
-
-
-function _mp_greetingMessageModal(options) {
-    var closeBtnDiv = document.createElement("div");
-    closeBtnDiv.id = "closeBtnDiv";
-    var closeBtn = document.createElement("div");
-    closeBtn.id = "closeBtn";
-    var testDiv = document.createElement("div");
-    testDiv.id = "testDiv";
-    var text = document.createElement("h1");
-    text.id = "text";
-    // var _mp_greeting_channels = createGreetingMessageChannels(
-    //   options._mp_order.split(",")
-    // );
-    // _mp_greeting_channels.id = "_mp_greeting_channels";
-    // testDiv.appendChild(text);
-    // text.appendChild(_mp_greeting_channels);
-    // testDiv.appendChild(closeBtn);
-    // closeBtnDiv.appendChild(testDiv);
-    closeBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        _mp_close_modal(closeBtnDiv, options);
-        options._mp_modal_open = false;
-    });
-
-    // testDiv.style =
-    //   "position: absolute; bottom:50%;" +
-    //   options._mp_pos_val +
-    //   ": 100%; margin:5px; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; overflow: hidden; border-radius: 7px;";
-
-    return closeBtnDiv;
-}
-
-// creates the top div that contains the close button
-function _mp_createModal(svg, color, textContent, options) {
-    if (screen.width > 820) {
-        var closeBtnDiv = document.createElement("div");
-        var closeBtn = document.createElement("div");
-        var testDiv = document.createElement("div");
-        var text = document.createElement("h1");
-        var titleSvg = _mp_createSVG(svg, "30px", "#fff");
-        text.innerText = textContent;
-        testDiv.style =
-            "display:flex; justify-content:space-between; height:45px; padding: 0 10px 0 5px; align-items:center; background-color:" +
-            color +
-            ";";
-        text.style =
-            "color: #fff; font-size: 15px; font-family: Mulish, sans-serif !important;";
-        closeBtnDiv.style =
-            "width: 300px; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; overflow: hidden; background: #fff; border-radius: 7px;";
-        closeBtn.innerHTML =
-            '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 11.293l10.293-10.293.707.707-10.293 10.293 10.293 10.293-.707.707-10.293-10.293-10.293 10.293-.707-.707 10.293-10.293-10.293-10.293.707-.707 10.293 10.293z" fill="#fff"/></svg>';
-        testDiv.appendChild(titleSvg);
-        testDiv.appendChild(text);
-        testDiv.appendChild(closeBtn);
-        closeBtnDiv.appendChild(testDiv);
-        closeBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            _mp_close_modal(closeBtnDiv, options);
-            options._mp_modal_open = false;
-        });
-    } else {
-        var closeBtnDiv = document.createElement("div");
-        var closeBtn = document.createElement("div");
-        var testDiv = document.createElement("div");
-        var text = document.createElement("h1");
-        var titleSvg = _mp_createSVG(svg, "60px", "#fff");
-        text.innerText = textContent;
-        testDiv.style =
-            "display:flex; justify-content:space-between; height:90px; padding: 0 10px 0 5px; align-items:center; background-color:" +
-            color +
-            ";";
-        text.style =
-            "color: #fff; font-size: 40px; font-family: Mulish, sans-serif !important;";
-        closeBtnDiv.style =
-            "width: 650px; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; overflow: hidden; border-radius: 7px;";
-        closeBtn.innerHTML =
-            '<svg width="60px" height="60px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 11.293l10.293-10.293.707.707-10.293 10.293 10.293 10.293-.707.707-10.293-10.293-10.293 10.293-.707-.707 10.293-10.293-10.293-10.293.707-.707 10.293 10.293z" fill="#fff"/></svg>';
-        testDiv.appendChild(titleSvg);
-        testDiv.appendChild(text);
-        testDiv.appendChild(closeBtn);
-        closeBtnDiv.appendChild(testDiv);
-        closeBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            _mp_close_modal(closeBtnDiv, options);
-            options._mp_modal_open = false;
-        });
-    }
-    return closeBtnDiv;
-}
-
-// creates the app buttons
-function _mp_createAppButton(backgroundColor, size) {
-
-
-    if (window.orderMulti) {
-
-        var button = document.createElement("div");
-        button.style =
-            "width:" +
-            size +
-            "; height:" +
-            size +
-            "; background-color:" +
-            backgroundColor +
-            "; position:relative !important; border-radius:50%; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; margin-bottom:2px; z-index:9999; cursor: pointer";
-
-    } else {
-        var button = document.createElement("div");
-        button.style =
-            "width:" +
-            size +
-            "; height:" +
-            size +
-            "; background-color:" +
-            backgroundColor +
-            "; position:relative !important; border-radius:50%; box-shadow: rgb(0 0 0 / 30%) 2px 2px 6px; margin-bottom:-1px; z-index:9999; cursor: pointer";
-
-    }
-
-
-    return button;
-}
-
-// creates the svg inside the app buttons
-function _mp_createSVG(svgPath, size, fill) {
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    svg.setAttribute("width", size);
-    svg.setAttribute("height", size);
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("fill-rule", "evenodd");
-    svg.setAttribute("clip-rule", "evenodd");
-    // svg.setAttribute("preserveAspectRatio", "xMidYMin");
-    svg.innerHTML = "<path d='" + svgPath + "' fill='" + fill + "' />";
-    return svg;
-}
-
-// gets the selected chat bubble svg path
-function _mp_getWidgetSvgPath(options) {
-    switch (options._mp_chat_bubble) {
-        case "1":
-            return (svg =
-                "M17.454 12.537c2.782 0 5.046 1.779 5.046 3.967 0 1.12-.462 1.745-1.102 2.509-.021.746-.049 1.054.139 1.866-.891-.306-.986-.396-1.666-.813-.894.218-1.489.38-2.465.38-3.087 0-4.998-2.046-4.998-3.942 0-2.188 2.264-3.967 5.046-3.967zm0-1.5c-3.436 0-6.546 2.292-6.546 5.467 0 2.799 2.633 5.442 6.498 5.442.699 0 1.44-.087 2.213-.275.914.561 2.933 1.128 4.352 1.385-.53-1.044-1.117-2.479-1.088-3.479.714-.853 1.117-1.953 1.117-3.073 0-3.158-3.089-5.467-6.546-5.467zm-8.485 4.614c-1.138-.11-1.611-.247-2.611-.491-.97.596-1.26.815-3.008 1.374.418-1.514.364-2.183.333-3.183-.834-1-1.683-2.07-1.683-3.943 0-3.502 3.589-6.352 8-6.352 4.264 0 7.748 2.664 7.978 6.004.698.038 1.377.14 2.021.315-.022-4.834-4.762-8.319-9.999-8.319-5.281 0-10 3.527-10 8.352 0 1.71.615 3.391 1.705 4.695.047 1.527-.851 3.718-1.661 5.313 2.168-.391 5.252-1.258 6.649-2.115.802.196 1.578.314 2.33.374-.135-.749-.148-1.317-.054-2.024z");
-        case "2":
-            return (svg =
-                "M2.001 9.352c0 1.873.849 2.943 1.683 3.943.031 1 .085 1.668-.333 3.183 1.748-.558 2.038-.778 3.008-1.374 1 .244 1.474.381 2.611.491-.094.708-.081 1.275.055 2.023-.752-.06-1.528-.178-2.33-.374-1.397.857-4.481 1.725-6.649 2.115.811-1.595 1.708-3.785 1.661-5.312-1.09-1.305-1.705-2.984-1.705-4.695-.001-4.826 4.718-8.352 9.999-8.352 5.237 0 9.977 3.484 9.998 8.318-.644-.175-1.322-.277-2.021-.314-.229-3.34-3.713-6.004-7.977-6.004-4.411 0-8 2.85-8 6.352zm20.883 10.169c-.029 1.001.558 2.435 1.088 3.479-1.419-.258-3.438-.824-4.352-1.385-.772.188-1.514.274-2.213.274-3.865 0-6.498-2.643-6.498-5.442 0-3.174 3.11-5.467 6.546-5.467 3.457 0 6.546 2.309 6.546 5.467 0 1.12-.403 2.221-1.117 3.074zm-7.563-3.021c0-.453-.368-.82-.82-.82s-.82.367-.82.82.368.82.82.82.82-.367.82-.82zm3 0c0-.453-.368-.82-.82-.82s-.82.367-.82.82.368.82.82.82.82-.367.82-.82zm3 0c0-.453-.368-.82-.82-.82s-.82.367-.82.82.368.82.82.82.82-.367.82-.82z");
-        case "3":
-            return (svg =
-                "M10 3.002c4.411 0 8 2.849 8 6.35 0 3.035-3.029 6.311-7.925 6.311-1.58 0-2.718-.317-3.718-.561-.966.593-1.256.813-3.006 1.373.415-1.518.362-2.182.331-3.184-.837-1.001-1.682-2.069-1.682-3.939 0-3.501 3.589-6.35 8-6.35zm0-2.002c-5.281 0-10 3.526-10 8.352 0 1.711.615 3.391 1.705 4.695.047 1.527-.851 3.718-1.661 5.312 2.168-.391 5.252-1.258 6.649-2.115 1.181.289 2.312.421 3.382.421 5.903 0 9.925-4.038 9.925-8.313 0-4.852-4.751-8.352-10-8.352zm11.535 11.174c-.161.488-.361.961-.601 1.416 1.677 1.262 2.257 3.226.464 5.365-.021.745-.049 1.049.138 1.865-.892-.307-.979-.392-1.665-.813-2.127.519-4.265.696-6.089-.855-.562.159-1.145.278-1.74.364 1.513 1.877 4.298 2.897 7.577 2.1.914.561 2.933 1.127 4.352 1.385-.53-1.045-1.117-2.479-1.088-3.479 1.755-2.098 1.543-5.436-1.348-7.348zm-15.035-3.763c-.591 0-1.071.479-1.071 1.071s.48 1.071 1.071 1.071 1.071-.479 1.071-1.071-.48-1.071-1.071-1.071zm3.5 0c-.591 0-1.071.479-1.071 1.071s.48 1.071 1.071 1.071 1.071-.479 1.071-1.071-.48-1.071-1.071-1.071zm3.5 0c-.591 0-1.071.479-1.071 1.071s.48 1.071 1.071 1.071 1.071-.479 1.071-1.071-.48-1.071-1.071-1.071z");
-        case "4":
-            return (svg =
-                "M20 15c0 .552-.448 1-1 1s-1-.448-1-1 .448-1 1-1 1 .448 1 1m-3 0c0 .552-.448 1-1 1s-1-.448-1-1 .448-1 1-1 1 .448 1 1m-3 0c0 .552-.448 1-1 1s-1-.448-1-1 .448-1 1-1 1 .448 1 1m5.415 4.946c-1 .256-1.989.482-3.324.482-3.465 0-7.091-2.065-7.091-5.423 0-3.128 3.14-5.672 7-5.672 3.844 0 7 2.542 7 5.672 0 1.591-.646 2.527-1.481 3.527l.839 2.686-2.943-1.272zm-13.373-3.375l-4.389 1.896 1.256-4.012c-1.121-1.341-1.909-2.665-1.909-4.699 0-4.277 4.262-7.756 9.5-7.756 5.018 0 9.128 3.194 9.467 7.222-1.19-.566-2.551-.889-3.967-.889-4.199 0-8 2.797-8 6.672 0 .712.147 1.4.411 2.049-.953-.126-1.546-.272-2.369-.483m17.958-1.566c0-2.172-1.199-4.015-3.002-5.21l.002-.039c0-5.086-4.988-8.756-10.5-8.756-5.546 0-10.5 3.698-10.5 8.756 0 1.794.646 3.556 1.791 4.922l-1.744 5.572 6.078-2.625c.982.253 1.932.407 2.85.489 1.317 1.953 3.876 3.314 7.116 3.314 1.019 0 2.105-.135 3.242-.428l4.631 2-1.328-4.245c.871-1.042 1.364-2.384 1.364-3.75");
-        default:
-            break;
-    }
-}
-
-// creates the widget svg
-function _mp_widgetSvg(size, options) {
-    var _mp_widgetSvgPath = _mp_getWidgetSvgPath(options);
-    var _mp_widgetCloseSvgPath =
-        "M12 11.293l10.293-10.293.707.707-10.293 10.293 10.293 10.293-.707.707-10.293-10.293-10.293 10.293-.707-.707 10.293-10.293-10.293-10.293.707-.707 10.293 10.293z";
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    svg.setAttribute("width", size);
-    svg.setAttribute("height", size);
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("fill-rule", "evenodd");
-    svg.setAttribute("clip-rule", "evenodd");
-    // svg.setAttribute("preserveAspectRatio", "xMidYMin");
-    svg.innerHTML = `<path class='_mp_open' style='display:block' d='
-    ${_mp_widgetSvgPath}' fill='${options._mp_bubble_color}' /><path class='_mp_close' style='display:none' d='
-    ${_mp_widgetCloseSvgPath}' fill='${options._mp_bubble_color}' />`;
-    return svg;
-}
-
-// following 3 functions close buttons/modals
-function _mp_click_outside(options) {
-    if (!!document.getElementById(`${options._mp_randomID}_modal`)) {
-        const modal = document.querySelector(`#${options._mp_randomID}_modal`);
-        modal.remove();
-        !!document.getElementById(`${options._mp_randomID}_modal`)
-            ? document.getElementById(`${options._mp_randomID}_modal`).remove()
-            : null;
-        options._mp_modal_open = false;
-    }
-}
-
-function _mp_close_modal(parent, options) {
-    while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
-    }
-    _mp_eventFire(
-        document.getElementById(`${options._mp_randomID}_modal`),
-        "click"
+    document.querySelector('#whatsapp-chat-widget')?.insertAdjacentHTML(
+      'beforeend',
+      `
+           
+           <div class='wa-chat-bubble'>
+               
+            </div>
+            `
     );
-}
+    document.querySelector('#whatsapp-chat-widget')?.insertAdjacentHTML(
+      'beforeend',
+      `
+ 
+      <div class='wa-chat-box'>
+     
+                 <div style="padding: 5px" class='wa-chat-box-content-chat-welcome'>
+                  ${!isMobile ? `Discuter avec nos centres d’admission directement sur WhatsApp en scannant ce QR code` : `Discutez avec nos centres d’admissions sur directement sur WhatsApp en cliquant sur ce bouton`}
+                 </div>
+ 						<div style="display: flex; justify-content: center;">
+                 ${!isMobile ? `
+    						<img src="https://cdn.jsdelivr.net/gh/messageplusio/public/qr-code-eureka.jpeg" width="256" height="256" padding=10px>
+</img>` : ''}
+		</div>
+<div style="display: flex; justify-content: center;">
+                 <a
+                    role="button"
+                    target="_blank"
+                    href="https://api.whatsapp.com/send?phone=${option.brandSetting.phoneNumber.replace(
+        /\+/g,
+        ''
+      )}&text=${option.brandSetting.messageText ? option.brandSetting.messageText : ''
+      }"
+                    title="WhatsApp" class="wa-chat-box-content-send-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block">
+                            <path
+                                d="M20.4115 3.48832C18.3715 1.44747 15.6592 0.217606 12.7798 0.0277473C9.90046 -0.162111 7.0502 0.700979 4.75984 2.4563C2.46948 4.21162 0.895133 6.73951 0.329958 9.56926C-0.235217 12.399 0.247308 15.3377 1.68768 17.8382L0 24.0006L6.30648 22.347C8.05076 23.2969 10.0052 23.7946 11.9914 23.7947H11.9964C14.3489 23.7945 16.6486 23.0969 18.6047 21.7899C20.5609 20.483 22.0856 18.6255 22.9862 16.4522C23.8869 14.2788 24.123 11.8873 23.6647 9.57981C23.2064 7.27233 22.0743 5.15252 20.4115 3.48832ZM11.9964 21.7862H11.9926C10.2218 21.7863 8.48364 21.3103 6.96 20.4081L6.5988 20.194L2.856 21.1751L3.85512 17.5271L3.61968 17.1532C2.45438 15.2963 1.93921 13.1048 2.15515 10.9232C2.37109 8.74163 3.3059 6.69365 4.81262 5.10125C6.31934 3.50884 8.31253 2.4623 10.4789 2.12614C12.6452 1.78999 14.8618 2.18328 16.7802 3.2442C18.6987 4.30511 20.2102 5.97349 21.0771 7.98705C21.944 10.0006 22.1172 12.2452 21.5694 14.3679C21.0216 16.4906 19.784 18.3711 18.051 19.7138C16.318 21.0564 14.1879 21.7851 11.9957 21.7852L11.9964 21.7862Z"
+                                fill="#E0E0E0" />
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M9.05653 6.84318C8.83645 6.35382 8.60461 6.34398 8.39533 6.33558C8.22397 6.32814 8.02789 6.32862 7.83229 6.32862C7.68338 6.33255 7.5369 6.36725 7.40205 6.43052C7.26719 6.4938 7.14689 6.58429 7.04869 6.6963C6.71644 7.01089 6.45337 7.39126 6.27627 7.81315C6.09917 8.23505 6.01191 8.68921 6.02005 9.1467C6.02005 10.5925 7.07317 11.9895 7.22005 12.1856C7.36693 12.3817 9.25285 15.4431 12.2394 16.6208C14.7215 17.5995 15.2267 17.4049 15.7655 17.3559C16.3043 17.3069 17.5038 16.6453 17.7489 15.9591C17.9939 15.2729 17.9937 14.6849 17.9202 14.5621C17.8468 14.4392 17.6509 14.3662 17.3569 14.2191C17.0629 14.072 15.6186 13.3611 15.3491 13.2632C15.0796 13.1653 14.8837 13.1163 14.6879 13.4105C14.4921 13.7048 13.9293 14.366 13.7577 14.5625C13.5861 14.7591 13.4147 14.7833 13.1209 14.6365C12.2547 14.2911 11.4552 13.7977 10.7581 13.1782C10.1157 12.5845 9.56482 11.8988 9.12349 11.1435C8.95213 10.8497 9.10501 10.6904 9.25261 10.5435C9.38461 10.412 9.54637 10.2005 9.69349 10.0289C9.81408 9.88041 9.91291 9.71548 9.98701 9.5391C10.0261 9.45807 10.0444 9.36855 10.0403 9.27866C10.0361 9.18877 10.0095 9.10134 9.96301 9.0243C9.88885 8.87718 9.31765 7.42422 9.05653 6.84318Z"
+                                fill="white" />
+                            <path
+                                d="M20.314 3.44995C18.2979 1.43114 15.6165 0.214135 12.7696 0.0256927C9.92272 -0.16275 7.10439 0.690221 4.83975 2.42568C2.57511 4.16114 1.01862 6.66071 0.46029 9.45869C-0.0980434 12.2567 0.37986 15.1622 1.80496 17.6339L0.136719 23.7268L6.37072 22.0922C8.09496 23.0312 10.027 23.5232 11.9903 23.5233H11.9954C14.3211 23.5235 16.5946 22.834 18.5285 21.5422C20.4624 20.2503 21.9699 18.414 22.8603 16.2655C23.7506 14.117 23.984 11.7527 23.5307 9.47156C23.0775 7.19043 21.9581 5.09491 20.314 3.44995ZM11.9954 21.5378H11.9927C10.2423 21.5379 8.52396 21.0674 7.01776 20.1755L6.66064 19.9639L2.96032 20.9337L3.94792 17.327L3.71536 16.9574C2.56347 15.1217 2.05427 12.9553 2.2678 10.7987C2.48133 8.64215 3.40549 6.61767 4.89499 5.04356C6.3845 3.46944 8.35488 2.43495 10.4964 2.1027C12.6379 1.77046 14.8291 2.15931 16.7255 3.20812C18.622 4.25693 20.1161 5.90623 20.973 7.89674C21.83 9.88725 22.0011 12.1061 21.4596 14.2045C20.918 16.3029 19.6945 18.1618 17.9813 19.489C16.2682 20.8162 14.1625 21.5365 11.9954 21.5366V21.5378Z"
+                                fill="white" />
+                        </svg>
+                        
+                        <span class="wa-chat-box-content-send-btn-text">${option.brandSetting.ctaText
+      }</span>
+                        <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: auto; display: block;">
+                          <path d="M1 1L7 7L1 13" stroke="white" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                  </a>
+              </div>
 
-function _mp_widget_close_button(parent) {
-    while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
-    }
-}
+                <div class='wa-chat-box-poweredby'>
+                    <a href="https://www.messageplus.io" class="wa-chat-box-poweredby-link">Powered by Message Plus</a>
+                </div>
+                          
 
-function _mp_widget_close_button_list(parent) {
-    parent.removeChild(parent.firstChild);
-}
-
-function _mp_eventFire(el, etype) {
-    if (el.fireEvent) {
-        el.fireEvent("on" + etype);
+            </div>
+            `
+    );
+    if (option.brandSetting.autoShow) {
+      document.querySelector('.wa-chat-box').classList.add('wa-chat-box-visible');
+      document.querySelector('#wa-widget-svg').style.display = 'none';
+      document.querySelector('#wa-widget-opened-svg').style.display = 'block';
+      document.querySelector('.wa-chat-bubble').style.display = 'none';
+      document
+        .querySelector('.wa-widget-send-button')
+        .classList.add('wa-widget-send-button-clicked');
     } else {
-        var evObj = document.createEvent("Events");
-        evObj.initEvent(etype, true, false);
-        el.dispatchEvent(evObj);
+      document.querySelector('.wa-chat-box').classList.remove('wa-chat-box-visible');
+      document.querySelector('#wa-widget-svg').style.display = 'block';
+      document.querySelector('#wa-widget-opened-svg').style.display = 'none';
+      document.querySelector('.wa-chat-bubble').style.cssText = '';
     }
-}
-
-function createGreetingMessageChannels(options) {
-    var _mp_channelDiv = document.createElement("div");
-    _mp_channelDiv.style = "display:flex";
-    _mp_channelDiv.classList = "_mp_channelDiv";
-    options._mp_order.split(",").forEach((el) => {
-        var _mp_button_color = "#4DC247";
-        var _mp_background_button_color = "#fff";
-        _mp_getButtonSize(options);
-        var _mp_whatsappBtn = _mp_createAppButton(
-            _mp_background_button_color,
-            _mp_widgetSize
-        );
-        _mp_whatsappBtn.id = "_mp_whatsappBtn";
-        _mp_whatsappBtn.classList = "_mp_channel_btn";
-        var _mp_whatsappSvgPath =
-            "M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z";
-        var svg = _mp_createSVG(
-            _mp_whatsappSvgPath,
-            "30px",
-            _mp_button_color
-        );
-        _mp_whatsappBtn.appendChild(svg);
-        var _mp_whatsappNumber = options._mp_whatsapp.replace("+", "");
-        if (options._mp_w_app_filled) {
-            var _mp_whatsappMessage = options._mp_w_app_filled.replace(
-                " ",
-                "%20"
-            );
-        } else {
-            var _mp_whatsappMessage = "";
-        }
-        var _mp_whatsappLink =
-            "https://wa.me/" +
-            _mp_whatsappNumber +
-            "?text=" +
-            _mp_whatsappMessage;
-        if (screen.width > 820) {
-            _mp_whatsappBtn.addEventListener("click", (e) => {
-                if (e.currentTarget) {
-                    _mp_click_outside(options);
-                    var _mp_whatsappDialogWrapper = document.createElement("div");
-                    _mp_whatsappDialogWrapper.classList =
-                        "_mp_whatsappDialogWrapper";
-                    var _mp_whatsappDialogContent = document.createElement("div");
-                    _mp_whatsappDialogContent.classList =
-                        "_mp_whatsappDialogContent";
-                    var _mp_whatsappDialogText = document.createElement("span");
-                    _mp_whatsappDialogText.classList = "_mp_whatsappDialogText";
-                    _mp_whatsappDialogText.innerText =
-                        "Discuter avec nos centres d’admission directement sur WhatsApp en scannant ce QR code";
-                    var _mp_whatsappQR = document.createElement("div");
-                    _mp_whatsappQR.classList = "_mp_whatsappQR";
-                    if (options._mp_w_app_qrcodeurl) {
-                        _mp_whatsappQR.innerHTML = `<img src='https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=${options._mp_w_app_qrcodeurl}&chld=H|1' height='200px' style='padding:10px'>`;
-                        _mp_whatsappDialogText.innerText =
-                            "Scannez le code QR:";
-                    } else {
-                        _mp_whatsappQR.innerHTML = `<img src='https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=${_mp_whatsappLink}&chld=H|1' height='200px' style='padding:10px'>`;
-                        _mp_whatsappDialogText.innerText =
-                            "Discuter avec nos centres d’admission directement sur WhatsApp en scannant ce QR code";
-                    }
-                    var _mp_whatsappDialogButton = document.createElement("a");
-                    _mp_whatsappDialogButton.classList = "_mp_whatsappDialogButton";
-                    _mp_whatsappDialogButton.setAttribute("href", _mp_whatsappLink);
-                    _mp_whatsappDialogButton.setAttribute("target", "_blank");
-                    var _mp_whatsappDialogButtonText =
-                        document.createElement("span");
-                    _mp_whatsappDialogButtonText.innerText = "Cliquer ici";
-                    _mp_whatsappDialogButtonText.classList =
-                        "_mp_whatsappDialogButtonText";
-                    var svg = _mp_createSVG(
-                        "M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z",
-                        "25px",
-                        "#fff"
-                    );
-
-                    _mp_whatsappDialogButton.appendChild(svg);
-                    _mp_whatsappDialogButton.appendChild(
-                        _mp_whatsappDialogButtonText
-                    );
-                    _mp_whatsappDialogContent.appendChild(_mp_whatsappDialogText);
-                    _mp_whatsappDialogContent.appendChild(_mp_whatsappQR);
-                    _mp_whatsappDialogContent.appendChild(_mp_whatsappDialogButton);
-                    _mp_whatsappDialogWrapper.appendChild(
-                        _mp_whatsappDialogContent
-                    );
-                    document.body.appendChild(_mp_whatsappDialogWrapper);
-                }
-                window.addEventListener("click", (e) => {
-                    if (
-                        e.target ==
-                        document.querySelector("._mp_whatsappDialogWrapper")
-                    ) {
-                        document.querySelector("._mp_whatsappDialogWrapper").remove();
-                    }
-                });
-            });
-        } else {
-            _mp_whatsappBtn.addEventListener("click", (e) => {
-                if (e.currentTarget) {
-                    _mp_click_outside(options);
-                    var _mp_whatsappDialogWrapper = document.createElement("div");
-                    _mp_whatsappDialogWrapper.classList =
-                        "_mp_whatsappDialogWrapper";
-                    var _mp_whatsappDialogContent = document.createElement("div");
-                    _mp_whatsappDialogContent.classList =
-                        "_mp_whatsappDialogContent";
-                    var _mp_whatsappDialogText = document.createElement("span");
-                    _mp_whatsappDialogText.classList = "_mp_whatsappDialogText";
-                    _mp_whatsappDialogText.innerText =
-                        "Discutez avec nos centres d’admissions sur directement sur WhatsApp en cliquant sur ce bouton";
-                    var _mp_whatsappDialogButton = document.createElement("a");
-                    _mp_whatsappDialogButton.classList = "_mp_whatsappDialogButton";
-                    _mp_whatsappDialogButton.setAttribute("href", _mp_whatsappLink);
-                    _mp_whatsappDialogButton.setAttribute("target", "_blank");
-                    var _mp_whatsappDialogButtonText =
-                        document.createElement("span");
-                    _mp_whatsappDialogButtonText.innerText = "Cliquer ici";
-                    _mp_whatsappDialogButtonText.classList =
-                        "_mp_whatsappDialogButtonText";
-                    var svg = _mp_createSVG(
-                        "M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z",
-                        "25px",
-                        "#fff"
-                    );
-
-                    _mp_whatsappDialogButton.appendChild(svg);
-                    _mp_whatsappDialogButton.appendChild(
-                        _mp_whatsappDialogButtonText
-                    );
-                    _mp_whatsappDialogContent.appendChild(_mp_whatsappDialogText);
-                    _mp_whatsappDialogContent.appendChild(_mp_whatsappDialogButton);
-                    _mp_whatsappDialogWrapper.appendChild(
-                        _mp_whatsappDialogContent
-                    );
-                    document.body.appendChild(_mp_whatsappDialogWrapper);
-                }
-                window.addEventListener("click", (e) => {
-                    if (
-                        e.target ==
-                        document.querySelector("._mp_whatsappDialogWrapper")
-                    ) {
-                        document.querySelector("._mp_whatsappDialogWrapper").remove();
-                    }
-                });
-            });
-        }
-        _mp_whatsappBtn.style = "margin-right:2px";
-        _mp_channelDiv.appendChild(_mp_whatsappBtn);
-        // creates instagram button for greeting modal
+    document.querySelector('#whatsapp-chat-widget').addEventListener('click', function (event) {
+      console.log('event', event);
+      if (
+        event.target.classList.contains('wa-widget-send-button') &&
+        event.target.classList.contains('wa-widget-send-button-clicked')
+      ) {
+        document.querySelector('.wa-chat-box').classList.remove('wa-chat-box-visible');
+        document.querySelector('#wa-widget-svg').style.display = 'block';
+        document.querySelector('#wa-widget-opened-svg').style.display = 'none';
+        document.querySelector('.wa-chat-bubble').style.cssText = '';
+        document.querySelector('.wa-widget-send-button').className = 'wa-widget-send-button';
+      } else if (
+        (event.target.classList.contains('wa-widget-send-button') &&
+          !event.target.classList.contains('wa-widget-send-button-clicked')) ||
+        event.target.classList.contains('wa-chat-bubble-text')
+      ) {
+        document.querySelector('.wa-chat-box').classList.add('wa-chat-box-visible');
+        document.querySelector('#wa-widget-svg').style.display = 'none';
+        document.querySelector('#wa-widget-opened-svg').style.display = 'block';
+        document.querySelector('.wa-chat-bubble').style.display = 'none';
+        document
+          .querySelector('.wa-widget-send-button')
+          .classList.add('wa-widget-send-button-clicked');
+      }
+      if (event.target.classList.contains('wa-chat-bubble-close-button')) {
+        document.querySelector('.wa-chat-bubble').classList.add('wa-chat-bubble-closed');
+      }
     });
-    _mp_channelDiv.style = "display:flex; margin-top:-5px";
-    return _mp_channelDiv;
+    window.onload = function () {
+      setTimeout(function () {
+        document.querySelector('.wa-chat-box').classList.add('wa-chat-box-transition');
+      }, 100);
+    };
+
+  }
+
+  var styles = `
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400&display=swap');
+  
+          #whatsapp-chat-widget{
+              display: ${option.enabled ? 'block' : 'none'}
+          }
+          .wa-chat-box-content-send-btn-text{
+              font-family: 'Outfit', sans-serif !important;
+              font-weight: 500;
+              font-size: 16px;
+              line-height: 20px;
+              color: #FFFFFF !important;
+
+          } 
+          .wa-chat-box-content-send-btn{
+              background-color: #25D366 !important;
+							border-radius: 100px;
+              text-decoration: none;
+              cursor: pointer;
+              position: relative;
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              padding: 16px 20px 16px 20px;
+              max-width: 512px;
+
+              border-width: initial;b
+              border-style: none;
+              border-color: initial;
+              border-image: initial;
+              overflow: hidden;
+              opacity: 1 !important;
+          }
+          .wa-chat-box-content-chat-welcome{        
+              font-family: 'Outfit', sans-serif !important;
+              font-size: 20px;
+              line-height: 150%;
+              color: #000000;
+          }
+          .wa-chat-box-brand{
+              width: 52px;
+              height: 52px;
+              border: 1px solid #363636;
+              box-shadow: 0px 2px 240px rgba(0, 0, 0, 0.04);
+              border-radius: 100px;
+              background-color: ${option.chatButtonSetting.backgroundColor};
+          }
+          .wa-chat-box{
+              background-color: white;
+              z-index: 16000160 !important;
+              margin-bottom: 132px;
+              margin-bottom: 92px;
+              min-width: 320px;
+              max-width: 640px;
+              position: fixed !important;
+              bottom: ${option.chatButtonSetting.marginBottom}px !important;
+              ${option.chatButtonSetting.position == 'left'
+      ? 'left : ' + option.chatButtonSetting.marginLeft + 'px'
+      : 'right : ' + option.chatButtonSetting.marginRight + 'px'
+    };
+              border-radius: 32px;
+              border: 2px solid ;
+              box-shadow: 1px 1px 1px 1px;
+              padding: 4px;
+              min-height: 279px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              gap: 12px;
+
+              pointer-events: none;
+              opacity: 0;
+              scale: 0;
+              transform-origin: ${option.chatButtonSetting.position == 'left' ? 'left' : 'right'
+    } bottom;
+              
+          }
+          .wa-chat-box-visible{
+              pointer-events: auto;
+              opacity: 1;
+              scale: 1;
+          }
+          .wa-chat-box-transition {
+              transition: scale 150ms ease-in, opacity 250ms ease-in;
+          }
+          .wa-widget-send-button {
+              margin: 0 0 ${option.chatButtonSetting.marginBottom}px 0 !important;      
+              position: fixed !important;
+              z-index: 16000160 !important;
+              bottom: 0 !important;
+              text-align: center !important;
+              height: 52px;
+              min-width: 52px;
+              border: ${option.chatButtonSetting.ctaIconMP ? '1px' : '0'} solid #363636;
+              border-radius: 100px;
+              visibility: visible;
+              transition: none !important;
+              background-color: ${option.chatButtonSetting.backgroundColor};
+              box-shadow: 4px 5px 10px rgba(0, 0, 0, 0.4);
+              ${option.chatButtonSetting.position == 'left'
+      ? 'left : ' + option.chatButtonSetting.marginLeft + 'px'
+      : 'right : ' + option.chatButtonSetting.marginRight + 'px'
+    };
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+          }
+          .wa-widget-send-button-clicked {
+            border: 1px solid #363636;
+          }
+          .wa-chat-box-poweredby{
+              margin-left: auto;
+              margin-right: auto;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 3px;
+              font-family: 'Outfit', sans-serif !important;
+              font-size: 12px;
+              line-height: 18px;
+              color: #25D366;
+          }
+          .wa-chat-box-poweredby-link{
+              font-weight: bold;
+              color: #0000EE !important;
+              text-decoration: none !important;
+          }
+          .wa-chat-box-poweredby-link::hover{
+              color: #0000EE !important;
+              text-decoration: none !important;
+          }
+  
+          .wa-chat-bubble{
+              display: ${option.chatButtonSetting.ctaText ? 'flex' : 'none'};
+              align-items: center;
+              gap: 8px;
+              z-index: 16000160 !important;
+              position: fixed !important;
+              margin-bottom: 63px;
+              width:64px;
+              bottom: ${option.chatButtonSetting.marginBottom}px !important;
+              ${option.chatButtonSetting.position == 'left'
+      ? 'left : ' + option.chatButtonSetting.marginLeft + 'px'
+      : 'right : ' + option.chatButtonSetting.marginRight + 'px'
+    };
+          }
+          .wa-chat-bubble-closed{
+            display: none;
+          }
+          .wa-chat-bubble-close-button{
+              height: 20px;
+              min-width: 20px;
+              background: #000000;
+              border-radius: 24px;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              order: ${option.chatButtonSetting.position == 'left' ? '0' : '1'};
+          }
+          .wa-chat-bubble-text{
+             font-family: 'Outfit', sans-serif !important;
+             background: #FFFFFF;
+             border: 1px solid #363636;
+             box-shadow: 2px 3px 0px ${option.chatButtonSetting.backgroundColor};
+             border-radius: 24px;
+             padding: 8px 16px;
+  
+             font-weight: 500;
+             font-size: 14px;
+             line-height: 150%;
+             color: #202020;
+             cursor: pointer;
+          }
+          .wa-chat-box::before {
+             content: '';
+             position: absolute;
+             top: 100%;
+             ${option.chatButtonSetting.position == 'left' ? 'left' : 'right'}: 29px;
+             width: 0;
+             height: 0;
+             border-width: 0 0px 30px 30px;
+             border-color: transparent transparent transparent transparent;
+             border-style: solid;
+             transform: rotate(${option.chatButtonSetting.position == 'left' ? '180' : '270'}deg);
+             z-index: 1;
+          }
+          .wa-chat-box::after {
+             content: '';
+             position: absolute;
+             top: 100%;
+             ${option.chatButtonSetting.position == 'left' ? 'left' : 'right'}: 27px;
+             width: 0;
+             height: 0;
+             border-width: 0px 0px 34px 34px;
+             border-color: transparent transparent transparent transparent;
+             border-style: solid;
+             border-radius: 2px;
+             filter: drop-shadow(${option.chatButtonSetting.position == 'left' ? '-5px -2px 0px' : '-2px 5px 0px'
+    } ${option.chatButtonSetting.backgroundColor});
+             transform: rotate(${option.chatButtonSetting.position == 'left' ? '180' : '270'}deg);
+          }
+  
+          @media only screen and (max-width: 600px) {
+              .wa-chat-box
+              {
+                  width: auto;
+                  position: fixed !important;
+                  right: 20px!important;
+                  left: 20px!important;
+              }
+          }
+      `;
+
+  var styleSheet = document.createElement('style');
+  styleSheet.innerText = styles;
+  document.getElementsByTagName('head')[0].appendChild(styleSheet);
 }
