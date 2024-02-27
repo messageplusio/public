@@ -114,7 +114,7 @@ async function CreateWhatsappChatWidget(
       <div class='wa-chat-box'>
      
                  <div style="padding: 5px" class='wa-chat-box-content-chat-welcome'>
-                  ${!isMobile ? `Discuter avec nos centres d’admission directement sur WhatsApp en scannant ce QR code :` : `Discutez avec nos centres d’admissions sur directement sur WhatsApp en cliquant sur ce bouton :`}
+                  ${!isMobile ? `Discuter avec nos centres d’admission directement sur WhatsApp en scannant ce QR code :` : `Discutez avec nos centres d’admissions directement sur WhatsApp en cliquant sur ce bouton :`}
                  </div>
  						<div style="display: flex; justify-content: center;">
             
