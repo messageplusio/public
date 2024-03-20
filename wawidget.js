@@ -18,6 +18,8 @@ async function CreateWhatsappChatWidget(
       backgroundColor: '#00E785',
       borderRadius: '25',
       ctaText: 'Cliquer ici',
+      desktopText: 'Discuter avec nos centres d’admission directement sur WhatsApp en scannant ce QR code :',
+      mobileText: 'Discutez avec nos centres d’admissions directement sur WhatsApp en cliquant sur ce bouton :',
       ctaIconMP: true,
       marginLeft: '0',
       marginRight: '20',
@@ -114,7 +116,7 @@ async function CreateWhatsappChatWidget(
       <div class='wa-chat-box'>
      
                  <div style="padding: 5px" class='wa-chat-box-content-chat-welcome'>
-                  ${!isMobile ? `Discuter avec nos centres d’admission directement sur WhatsApp en scannant ce QR code :` : `Discutez avec nos centres d’admissions directement sur WhatsApp en cliquant sur ce bouton :`}
+                  ${!isMobile ? option.chatButtonSetting.desktopText : option.chatButtonSetting.mobileText}
                  </div>
  						<div style="display: flex; justify-content: center;">
             
