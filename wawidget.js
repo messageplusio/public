@@ -125,7 +125,7 @@ async function CreateWhatsappChatWidget(
     						<img src=${option.brandSetting.qrUrl} width="128" height="128" padding=4px>
 </img>` : ''}
 		</div>
-                            ${option.brandSetting.showButton ? `
+                            ${(isMobile || option.brandSetting.showButton) ? `
 
 <div style="display: flex; justify-content: center;">
                  <a
