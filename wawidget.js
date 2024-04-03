@@ -13,6 +13,7 @@ async function CreateWhatsappChatWidget(
       messageText: 'Hey',
       phoneNumber: '33634674038',
       qrUrl: '',
+      showButton: true
     },
     chatButtonSetting: {
       backgroundColor: '#00E785',
@@ -124,7 +125,8 @@ async function CreateWhatsappChatWidget(
     						<img src=${option.brandSetting.qrUrl} width="128" height="128" padding=4px>
 </img>` : ''}
 		</div>
-    
+                            ${option.brandSetting.showButton ? `
+
 <div style="display: flex; justify-content: center;">
                  <a
                     role="button"
@@ -146,13 +148,12 @@ async function CreateWhatsappChatWidget(
                                 d="M20.314 3.44995C18.2979 1.43114 15.6165 0.214135 12.7696 0.0256927C9.92272 -0.16275 7.10439 0.690221 4.83975 2.42568C2.57511 4.16114 1.01862 6.66071 0.46029 9.45869C-0.0980434 12.2567 0.37986 15.1622 1.80496 17.6339L0.136719 23.7268L6.37072 22.0922C8.09496 23.0312 10.027 23.5232 11.9903 23.5233H11.9954C14.3211 23.5235 16.5946 22.834 18.5285 21.5422C20.4624 20.2503 21.9699 18.414 22.8603 16.2655C23.7506 14.117 23.984 11.7527 23.5307 9.47156C23.0775 7.19043 21.9581 5.09491 20.314 3.44995ZM11.9954 21.5378H11.9927C10.2423 21.5379 8.52396 21.0674 7.01776 20.1755L6.66064 19.9639L2.96032 20.9337L3.94792 17.327L3.71536 16.9574C2.56347 15.1217 2.05427 12.9553 2.2678 10.7987C2.48133 8.64215 3.40549 6.61767 4.89499 5.04356C6.3845 3.46944 8.35488 2.43495 10.4964 2.1027C12.6379 1.77046 14.8291 2.15931 16.7255 3.20812C18.622 4.25693 20.1161 5.90623 20.973 7.89674C21.83 9.88725 22.0011 12.1061 21.4596 14.2045C20.918 16.3029 19.6945 18.1618 17.9813 19.489C16.2682 20.8162 14.1625 21.5365 11.9954 21.5366V21.5378Z"
                                 fill="white" />
                         </svg>
-                        
-                        <span class="wa-chat-box-content-send-btn-text">Cliquez ici</span>
+			<span class="wa-chat-box-content-send-btn-text">Cliquez ici</span>
                         <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: auto; display: block;">
                           <path d="M1 1L7 7L1 13" stroke="white" stroke-width="2" stroke-linecap="round" />
                         </svg>
                   </a>
-              </div>
+              </div>` : ''}
 
                 <div class='wa-chat-box-poweredby'>
                     Powered by <a href="https://messageplus.io" class="wa-chat-box-poweredby-link">Message Plus</a>
