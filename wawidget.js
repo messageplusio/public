@@ -25,6 +25,7 @@ async function CreateWhatsappChatWidget(
       marginLeft: '0',
       marginRight: '20',
       marginBottom: '20',
+      marginTop: '20',
       position: 'right',
     },
     enabled: false,
@@ -36,6 +37,7 @@ async function CreateWhatsappChatWidget(
   if (!option.chatButtonSetting.position) {
     option.chatButtonSetting.position = 'right';
     option.chatButtonSetting.marginBottom = '20';
+    option.chatButtonSetting.marginTop = '20';
     option.chatButtonSetting.marginLeft = '0';
     option.chatButtonSetting.marginRight = '20';
   }
@@ -273,6 +275,7 @@ async function CreateWhatsappChatWidget(
               min-width: 320px;
               max-width: 640px;
               position: fixed !important;
+	      top: ${option.chatButtonSetting.marginTop}px;
               bottom: ${option.chatButtonSetting.marginBottom}px !important;
               ${option.chatButtonSetting.position == 'left'
       ? 'left : ' + option.chatButtonSetting.marginLeft + 'px'
@@ -360,6 +363,7 @@ async function CreateWhatsappChatWidget(
               position: fixed !important;
               margin-bottom: 63px;
               width:64px;
+	      top: ${option.chatButtonSetting.marginTop}px;
               bottom: ${option.chatButtonSetting.marginBottom}px !important;
               ${option.chatButtonSetting.position == 'left'
       ? 'left : ' + option.chatButtonSetting.marginLeft + 'px'
