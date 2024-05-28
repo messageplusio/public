@@ -108,7 +108,9 @@ async function CreateWhatsappChatWidget(
       `
            
            <div class='wa-chat-bubble'>
-               
+               <div class="wa-chat-bubble-text">
+                     ${option.chatButtonSetting.ctaText}
+                </div>
             </div>
             `
     );
@@ -217,20 +219,42 @@ async function CreateWhatsappChatWidget(
 
   var styles = `
           @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400&display=swap');
-  
+          @font-face {
+            font-family: 'Sofia Pro';
+            src: url('https://cdn.jsdelivr.net/gh/messageplusio/public@6c2b38ec34219c20f2ea5d20dda6784e3f896376/fonts/Sofia Pro Semi Bold Az.otf') format('opentype');
+            font-weight: 600;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Sofia Pro';
+            src: url('https://cdn.jsdelivr.net/gh/messageplusio/public@6c2b38ec34219c20f2ea5d20dda6784e3f896376/fonts/Sofia Pro Semi Medium.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+        }
+         @font-face {
+            font-family: 'Sofia Pro';
+            src: url('https://cdn.jsdelivr.net/gh/messageplusio/public@6c2b38ec34219c20f2ea5d20dda6784e3f896376/fonts/Sofia Pro Semi Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Sofia Pro';
+            src: url('https://cdn.jsdelivr.net/gh/messageplusio/public@6c2b38ec34219c20f2ea5d20dda6784e3f896376/fonts/Sofia Pro Light.otf') format('opentype');
+            font-weight: 300;
+            font-style: normal;
+        }
           #whatsapp-chat-widget{
               display: ${option.enabled ? 'block' : 'none'}
           }
           .wa-chat-box-content-send-btn-text{
-              font-family: 'Outfit', sans-serif !important;
-              font-weight: 500;
+              font-family: 'Sofia Pro', sans-serif !important;
+              font-weight: 600;
               font-size: 16px;
               line-height: 20px;
-              color: #FFFFFF !important;
-
-          } 
+              color: #f7f2ec !important;
+          }
           .wa-chat-box-content-send-btn{
-              background-color: #25D366 !important;
+              background-color: #131925 !important;
 							border-radius: 100px;
               text-decoration: none;
               cursor: pointer;
@@ -238,8 +262,7 @@ async function CreateWhatsappChatWidget(
               display: flex;
               align-items: center;
               gap: 14px;
-              padding: 16px 20px 16px 20px;
-              max-width: 256px;
+              padding: 16px 20px;
 
               border-width: initial;b
               border-style: none;
@@ -249,33 +272,28 @@ async function CreateWhatsappChatWidget(
               opacity: 1 !important;
           }
           .wa-chat-box-content-chat-welcome{        
-              font-family: 'Outfit', sans-serif !important;
-              font-size: 16px;
+              font-family: 'Sofia Pro', sans-serif !important;
+              font-weight: 400;
+              font-size: 20px;
               line-height: 150%;
-              color: #000000;
-              text-align: center;
-              max-width: 480px;
-              margin-top: 16px;
-              margin-left: 12px;
-              margin-right: 12px;
+              color: #131925;
           }
           .wa-chat-box-brand{
               width: 52px;
               height: 52px;
-              border: 1px solid #363636;
+              border: 1px solid #131925;
               box-shadow: 0px 2px 240px rgba(0, 0, 0, 0.04);
               border-radius: 100px;
               background-color: ${option.chatButtonSetting.backgroundColor};
           }
           .wa-chat-box{
-              background-color: white;
+              background-color: #f7f2ec;
               z-index: 16000160 !important;
-              margin-bottom: 108px;
-              margin-bottom: 72px;
+              margin-bottom: 132px;
+              margin-bottom: 92px;
               min-width: 320px;
               max-width: 640px;
               position: fixed !important;
-	      top: ${option.chatButtonSetting.marginTop}px;
               bottom: ${option.chatButtonSetting.marginBottom}px !important;
               ${option.chatButtonSetting.position == 'left'
       ? 'left : ' + option.chatButtonSetting.marginLeft + 'px'
@@ -284,11 +302,11 @@ async function CreateWhatsappChatWidget(
               border-radius: 32px;
               border: 2px solid ;
               box-shadow: 1px 1px 1px 1px;
-              padding: 2px;
-              min-height: 240px;
+              padding: 4px;
+              min-height: 279px;
               display: flex;
               flex-direction: column;
-              justify-content: center;
+              justify-content: space-between;
               gap: 12px;
 
               pointer-events: none;
@@ -314,7 +332,7 @@ async function CreateWhatsappChatWidget(
               text-align: center !important;
               height: 52px;
               min-width: 52px;
-              border: ${option.chatButtonSetting.ctaIconMP ? '1px' : '0'} solid #363636;
+              border: ${option.chatButtonSetting.ctaIconMP ? '1px' : '0'} solid #131925;
               border-radius: 100px;
               visibility: visible;
               transition: none !important;
@@ -330,7 +348,7 @@ async function CreateWhatsappChatWidget(
               justify-content: center;
           }
           .wa-widget-send-button-clicked {
-            border: 1px solid #363636;
+            border: 1px solid #131925;
           }
           .wa-chat-box-poweredby{
               margin-left: auto;
@@ -339,19 +357,20 @@ async function CreateWhatsappChatWidget(
               justify-content: center;
               align-items: center;
               gap: 3px;
-              font-family: 'Outfit', sans-serif !important;
+              font-family: 'Sofia Pro', sans-serif !important;
+              font-weight: 500;
               font-size: 12px;
               line-height: 18px;
-              color: #999999;
-              margin-bottom: 12px;
+              color: #a5c3ee;
           }
           .wa-chat-box-poweredby-link{
+          		font-family: 'Sofia Pro', sans-serif !important;
               font-weight: 600;
-              color: #666666 !important;
+              color: #3c3cc9 !important;
               text-decoration: none !important;
           }
           .wa-chat-box-poweredby-link::hover{
-              color: #666666 !important;
+              color: #3c3cc9 !important;
               text-decoration: none !important;
           }
   
@@ -362,8 +381,6 @@ async function CreateWhatsappChatWidget(
               z-index: 16000160 !important;
               position: fixed !important;
               margin-bottom: 63px;
-              width:64px;
-	      top: ${option.chatButtonSetting.marginTop}px;
               bottom: ${option.chatButtonSetting.marginBottom}px !important;
               ${option.chatButtonSetting.position == 'left'
       ? 'left : ' + option.chatButtonSetting.marginLeft + 'px'
@@ -385,17 +402,17 @@ async function CreateWhatsappChatWidget(
               order: ${option.chatButtonSetting.position == 'left' ? '0' : '1'};
           }
           .wa-chat-bubble-text{
-             font-family: 'Outfit', sans-serif !important;
-             background: #FFFFFF;
-             border: 1px solid #363636;
-             box-shadow: 2px 3px 0px ${option.chatButtonSetting.backgroundColor};
+             font-family: 'Sofia Pro', sans-serif !important;
+             background: #f7f2ec;
+             border: 1px solid #131925;
+             box-shadow: 1px 1px 1px 1px;
              border-radius: 24px;
              padding: 8px 16px;
   
-             font-weight: 500;
+             font-weight: 600;
              font-size: 14px;
              line-height: 150%;
-             color: #202020;
+             color: #131925;
              cursor: pointer;
           }
           .wa-chat-box::before {
