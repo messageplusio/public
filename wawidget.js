@@ -388,7 +388,7 @@ async function CreateWhatsappChatWidget(
               z-index: 16000160 !important;
               position: fixed !important;
               margin-bottom: 63px;
-	      width:64px;
+	      min-width:64px;
 	      top: ${option.chatButtonSetting.marginTop}px;
               bottom: ${option.chatButtonSetting.marginBottom}px !important;
               ${option.chatButtonSetting.position == 'left'
