@@ -1,3 +1,13 @@
+async function getUserCountry() {
+  try {
+    const response = await fetch('https://ipapi.co/json/');
+    const data = await response.json();
+    return data.country_name;
+  } catch (error) {
+    return null;
+  }
+}
+
 async function CreateWhatsappChatWidget(
   option = {
     brandSetting: {
@@ -13,7 +23,8 @@ async function CreateWhatsappChatWidget(
       messageText: 'Hey',
       phoneNumber: '33634674038',
       qrUrl: '',
-      showButton: true
+      showButton: true,
+      allowedCountries: ['France'] // new feature that I want
     },
     chatButtonSetting: {
       backgroundColor: '#00E785',
@@ -34,6 +45,12 @@ async function CreateWhatsappChatWidget(
   if (option.enabled == false) {
     return;
   }
+  
+  const userCountry = await getUserCountry();
+  if (option.brandSetting.allowedCountries && !option.brandSetting.allowedCountries.includes(userCountry)) {
+    return;
+  }
+	
   if (!option.chatButtonSetting.position) {
     option.chatButtonSetting.position = 'right';
     option.chatButtonSetting.marginBottom = '20';
