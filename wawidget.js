@@ -126,7 +126,7 @@ async function CreateWhatsappChatWidget(
            
            <div class='wa-chat-bubble'>
                <div class="wa-chat-bubble-text">
-                     ${option.chatButtonSetting.ctaText}
+                     ${option.brandSetting.ctaText}
                 </div>
             </div>
             `
