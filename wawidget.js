@@ -177,7 +177,7 @@ async function CreateWhatsappChatWidget(
               </div>` : ''}
 
                 <div class='wa-chat-box-poweredby'>
-                    Powered by <a href="https://messageplus.io" class="wa-chat-box-poweredby-link">Message Plus</a>
+                    Powered by <a href="https://messageplus.io" class="wa-chat-box-poweredby-link" target="_blank">Message Plus</a>
                 </div>
                           
 
