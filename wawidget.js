@@ -146,6 +146,11 @@ async function CreateWhatsappChatWidget(
     						<img src=${option.brandSetting.qrUrl} width="128" height="128" padding=4px>
 </img>` : ''}
 		</div>
+    ${option.brandSetting.bottomText ? `
+    						<div class="wa-chat-box-content-chat-welcome" style="text-align: center; margin-bottom: 10px;">
+        ${option.brandSetting.bottomText}
+      </div>
+      ` : ''}
                             ${(isMobile || option.brandSetting.showButton) ? `
 
 <div style="display: flex; justify-content: center;">
