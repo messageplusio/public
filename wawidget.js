@@ -46,9 +46,11 @@ async function CreateWhatsappChatWidget(
     return;
   }
   
-  const userCountry = await getUserCountry();
-  if (option.brandSetting.allowedCountries && !option.brandSetting.allowedCountries.includes(userCountry)) {
-    return;
+  if (option.brandSetting.allowedCountries) {
+    const userCountry = await getUserCountry();
+    if (!option.brandSetting.allowedCountries.includes(userCountry)) {
+    	return;
+    }
   }
 	
   if (!option.chatButtonSetting.position) {
