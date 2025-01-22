@@ -1,11 +1,36 @@
 async function getUserCountry() {
-  try {
-    const response = await fetch('https://ipapi.co/json/');
-    const data = await response.json();
-    return data.country_name;
-  } catch (error) {
-    return null;
+  const apis = [
+    {
+      url: 'https://ipapi.co/json/',
+      extractCountry: (data) => data.country, // ISO country code
+    },
+    {
+      url: 'https://ipinfo.io/json',
+      extractCountry: (data) => data.country, // ISO country code
+    },
+    {
+      url: 'https://api.db-ip.com/v2/free/self',
+      extractCountry: (data) => data.countryCode, // ISO country code
+    },
+    {
+      url: 'https://api.ipdata.co?api-key=235b98e4c31bbb72145e1d6494d27ae0bedfc9f4a21725faddc3473f',
+      extractCountry: (data) => data.country_code, // ISO country code
+    }  
+  ];
+
+  for (const api of apis) {
+    try {
+      const response = await fetch(api.url);
+      if (!response.ok) continue; // Skip to the next API if the request fails
+      const data = await response.json();
+      const country = api.extractCountry(data);
+      if (country) return country; // Return country code if successfully retrieved
+    } catch (error) {
+      console.error(`Failed to fetch from ${api.url}:`, error);
+    }
   }
+
+  return null; // Return null if all APIs fail
 }
 
 async function CreateWhatsappChatWidget(
@@ -46,12 +71,19 @@ async function CreateWhatsappChatWidget(
     return;
   }
   
-  if (option.brandSetting.allowedCountries) {
-    const userCountry = await getUserCountry();
-    if (!option.brandSetting.allowedCountries.includes(userCountry)) {
-    	return;
+  // Wrap the code in an async function to use 'await'
+  async function checkUserCountry(option) {
+    if (option.brandSetting.allowedCountries) {
+      const userCountry = await getUserCountry();
+      if (!option.brandSetting.allowedCountries.includes(userCountry)) {
+        return; // Stop if the country is not allowed
+      }
+      // Continue with further processing if the country is allowed
     }
   }
+
+  checkUserCountry(option);
+
 	
   if (!option.chatButtonSetting.position) {
     option.chatButtonSetting.position = 'right';
