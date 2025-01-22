@@ -1,10 +1,6 @@
 async function getUserCountry() {
   const apis = [
     {
-      url: 'https://ipapi.co/json/',
-      extractCountry: (data) => data.country, // ISO country code
-    },
-    {
       url: 'https://ipinfo.io/json',
       extractCountry: (data) => data.country, // ISO country code
     },
@@ -15,7 +11,11 @@ async function getUserCountry() {
     {
       url: 'https://api.ipdata.co?api-key=235b98e4c31bbb72145e1d6494d27ae0bedfc9f4a21725faddc3473f',
       extractCountry: (data) => data.country_code, // ISO country code
-    }  
+    },
+    {
+      url: 'https://ipapi.co/json/',
+      extractCountry: (data) => data.country, // ISO country code
+    },
   ];
 
   for (const api of apis) {
