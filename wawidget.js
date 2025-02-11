@@ -16,6 +16,18 @@ async function getUserCountry() {
       url: 'https://ipapi.co/json/',
       extractCountry: (data) => data.country, // ISO country code
     },
+    {
+      url: 'https://ipwho.is/',
+      extractCountry: (data) => data.country_code, // ISO country code
+    },
+    {
+      url: 'http://ip-api.com/json/',
+      extractCountry: (data) => data.countryCode, // ISO country code
+    },
+    {
+      url: 'https://api.ipgeolocation.io/ipgeo?apiKey=f9cac5dc8dbd49f4ab71e5b6dd44a0c5',
+      extractCountry: (data) => data.country_code2, // ISO country code
+    }
   ];
 
   for (const api of apis) {
@@ -24,7 +36,9 @@ async function getUserCountry() {
       if (!response.ok) continue; // Skip to the next API if the request fails
       const data = await response.json();
       const country = api.extractCountry(data);
-      if (country) return country; // Return country code if successfully retrieved
+      if (typeof country === 'string' && /^[A-Z]{2}$/.test(country.trim())) {
+        return country.trim();
+      }
     } catch (error) {
       console.error(`Failed to fetch from ${api.url}:`, error);
     }
