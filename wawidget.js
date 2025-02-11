@@ -71,18 +71,21 @@ async function CreateWhatsappChatWidget(
     return;
   }
   
-  // Wrap the code in an async function to use 'await'
-  async function checkUserCountry(option) {
+async function checkUserCountry(option) {
     if (option.brandSetting.allowedCountries) {
       const userCountry = await getUserCountry();
-      if (!option.brandSetting.allowedCountries.includes(userCountry)) {
-        return; // Stop if the country is not allowed
+      if (!userCountry) {
+        return false; // Stop if all APIs fail
       }
-      // Continue with further processing if the country is allowed
+      if (!option.brandSetting.allowedCountries.includes(userCountry)) {
+        return false; // Stop if country is not allowed
+      }
     }
+    return true; // Allowed to continue
   }
 
-  checkUserCountry(option);
+  const isAllowed = await checkUserCountry(option);
+  if (!isAllowed) return; // Stop widget execution if not allowed
 
 	
   if (!option.chatButtonSetting.position) {
