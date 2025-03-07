@@ -63,7 +63,8 @@ async function CreateWhatsappChatWidget(
       phoneNumber: '33634674038',
       qrUrl: '',
       showButton: true,
-      allowedCountries: ['France'] // new feature that I want
+      allowedCountries: ['France'],
+      visibleWeekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     },
     chatButtonSetting: {
       backgroundColor: '#00E785',
@@ -83,6 +84,22 @@ async function CreateWhatsappChatWidget(
 ) {
   if (option.enabled == false) {
     return;
+  }
+
+// Function to check if current day is in visibleWeekdays
+  function isVisibleWeekday(visibleWeekdays) {
+    if (!visibleWeekdays || visibleWeekdays.length === 0) {
+      return true; // If no weekdays specified, show on all days
+    }
+    
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const currentDay = weekdays[new Date().getDay()];
+    return visibleWeekdays.includes(currentDay);
+  }
+
+  // Check if widget should be shown based on weekday
+  if (!isVisibleWeekday(option.brandSetting.visibleWeekdays)) {
+    return; // Don't show widget if current day is not in visibleWeekdays
   }
   
 async function checkUserCountry(option) {
