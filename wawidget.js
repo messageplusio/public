@@ -64,7 +64,10 @@ async function CreateWhatsappChatWidget(
       qrUrl: '',
       showButton: true,
       allowedCountries: ['France'],
-      visibleWeekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      visibleWeekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      startTime: '09:00',
+      endTime: '18:00',
+      timeZone: 'Europe/Paris'
     },
     chatButtonSetting: {
       backgroundColor: '#00E785',
@@ -86,20 +89,52 @@ async function CreateWhatsappChatWidget(
     return;
   }
 
-// Function to check if current day is in visibleWeekdays
-  function isVisibleWeekday(visibleWeekdays) {
-    if (!visibleWeekdays || visibleWeekdays.length === 0) {
-      return true; // If no weekdays specified, show on all days
-    }
+// Function to check if current time is within visible range
+  function isVisibleTime(brandSetting) {
+    const { visibleWeekdays, startTime, endTime, timeZone } = brandSetting;
     
-    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const currentDay = weekdays[new Date().getDay()];
-    return visibleWeekdays.includes(currentDay);
+    // If no restrictions specified, show always
+    if (!visibleWeekdays && !startTime && !endTime) {
+      return true;
+    }
+
+    // Get current time in specified timezone
+    const now = new Date();
+    const timeOptions = { timeZone: timeZone || 'Europe/Paris' };
+    const currentDay = now.toLocaleString('en-US', { weekday: 'short', ...timeOptions });
+    const currentTime = now.toLocaleString('en-US', { 
+      hour12: false, 
+      hour: '2-digit', 
+      minute: '2-digit',
+      ...timeOptions 
+    }).replace(':', '');
+
+    // Check weekday
+    if (visibleWeekdays && visibleWeekdays.length > 0) {
+      if (!visibleWeekdays.includes(currentDay)) {
+        return false;
+      }
+    }
+
+    // Check time range if specified
+    if (startTime && endTime) {
+      const start = startTime.replace(':', '');
+      const end = endTime.replace(':', '');
+      
+      // Handle case where time range crosses midnight
+      if (start > end) {
+        return currentTime >= start || currentTime <= end;
+      }
+      
+      return currentTime >= start && currentTime <= end;
+    }
+
+    return true; // If no time specified but weekdays match
   }
 
-  // Check if widget should be shown based on weekday
-  if (!isVisibleWeekday(option.brandSetting.visibleWeekdays)) {
-    return; // Don't show widget if current day is not in visibleWeekdays
+  // Check if widget should be shown based on day and time
+  if (!isVisibleTime(option.brandSetting)) {
+    return; // Don't show widget if outside visible time/day range
   }
   
 async function checkUserCountry(option) {
