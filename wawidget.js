@@ -64,10 +64,11 @@ async function CreateWhatsappChatWidget(
       qrUrl: '',
       showButton: true,
       allowedCountries: ['France'],
-      visibleWeekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      startTime: '09:00',
-      endTime: '18:00',
-      timeZone: 'Europe/Paris'
+      timeZone: 'Europe/Paris',
+      offDayStart: 'Fri',
+      offTimeStart: '17:00',
+      offDayEnd: 'Mon',
+      offTimeEnd: '09:00',
     },
     chatButtonSetting: {
       backgroundColor: '#00E785',
@@ -89,52 +90,68 @@ async function CreateWhatsappChatWidget(
     return;
   }
 
-// Function to check if current time is within visible range
-  function isVisibleTime(brandSetting) {
-    const { visibleWeekdays, startTime, endTime, timeZone } = brandSetting;
+function isVisibleTime(brandSetting) {
+    const { 
+      timeZone = 'Europe/Paris', 
+      offDayStart = 'Fri',
+      offTimeStart = '17:00',
+      offDayEnd = 'Mon',
+      offTimeEnd = '09:00'
+    } = brandSetting;
     
-    // If no restrictions specified, show always
-    if (!visibleWeekdays && !startTime && !endTime) {
-      return true;
-    }
-
-    // Get current time in specified timezone
-    const now = new Date();
-    const timeOptions = { timeZone: timeZone || 'Europe/Paris' };
-    const currentDay = now.toLocaleString('en-US', { weekday: 'short', ...timeOptions });
-    const currentTime = now.toLocaleString('en-US', { 
-      hour12: false, 
-      hour: '2-digit', 
+    // Get current date and time in the specified timezone
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: timeZone,
+      weekday: 'short',
+      hour: '2-digit',
       minute: '2-digit',
-      ...timeOptions 
-    }).replace(':', '');
-
-    // Check weekday
-    if (visibleWeekdays && visibleWeekdays.length > 0) {
-      if (!visibleWeekdays.includes(currentDay)) {
-        return false;
+      hour12: false
+    });
+    
+    const now = new Date();
+    const parts = formatter.formatToParts(now);
+    
+    // Extract day and time from formatted parts
+    const currentDay = parts.find(part => part.type === 'weekday').value;
+    const currentHour = parts.find(part => part.type === 'hour').value;
+    const currentMinute = parts.find(part => part.type === 'minute').value;
+    
+    // Convert to comparable formats
+    const currentTime = `${currentHour}:${currentMinute}`;
+    
+    // Days of the week for comparison
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    console.log(currentDay)
+    // Check if current day is within business days (Mon-Fri)
+    if (currentDay === 'Sat' || currentDay === 'Sun') {
+      return false; // Weekend - widget is off
+    }
+    
+    // Check if current day is Friday and after closing time
+    if (currentDay === offDayStart) {
+      const [offHour, offMinute] = offTimeStart.split(':');
+      if (parseInt(currentHour) > parseInt(offHour) || 
+          (parseInt(currentHour) === parseInt(offHour) && parseInt(currentMinute) >= parseInt(offMinute))) {
+        return false; // Friday after 5 PM - widget is off
       }
     }
-
-    // Check time range if specified
-    if (startTime && endTime) {
-      const start = startTime.replace(':', '');
-      const end = endTime.replace(':', '');
-      
-      // Handle case where time range crosses midnight
-      if (start > end) {
-        return currentTime >= start || currentTime <= end;
+    
+    // Check if current day is Monday and before opening time
+    if (currentDay === offDayEnd) {
+      const [onHour, onMinute] = offTimeEnd.split(':');
+      if (parseInt(currentHour) < parseInt(onHour) || 
+          (parseInt(currentHour) === parseInt(onHour) && parseInt(currentMinute) < parseInt(onMinute))) {
+        return false; // Monday before 9 AM - widget is off
       }
-      
-      return currentTime >= start && currentTime <= end;
     }
-
-    return true; // If no time specified but weekdays match
+    
+    // Otherwise, widget is on during business hours
+    return true;
   }
 
   // Check if widget should be shown based on day and time
   if (!isVisibleTime(option.brandSetting)) {
-    return; // Don't show widget if outside visible time/day range
+    return; // Don't show widget if within off period
   }
   
 async function checkUserCountry(option) {
