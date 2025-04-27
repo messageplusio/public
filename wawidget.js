@@ -91,63 +91,59 @@ async function CreateWhatsappChatWidget(
   }
 
 function isVisibleTime(brandSetting) {
-    const { 
-      timeZone = 'Europe/Paris', 
-      offDayStart = 'Fri',
-      offTimeStart = '17:00',
-      offDayEnd = 'Mon',
-      offTimeEnd = '09:00'
-    } = brandSetting;
-    
-    // Get current date and time in the specified timezone
-    const formatter = new Intl.DateTimeFormat('en-US', {
-      timeZone: timeZone,
-      weekday: 'short',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    });
-    
-    const now = new Date();
-    const parts = formatter.formatToParts(now);
-    
-    // Extract day and time from formatted parts
-    const currentDay = parts.find(part => part.type === 'weekday').value;
-    const currentHour = parts.find(part => part.type === 'hour').value;
-    const currentMinute = parts.find(part => part.type === 'minute').value;
-    
-    // Convert to comparable formats
-    const currentTime = `${currentHour}:${currentMinute}`;
-    
-    // Days of the week for comparison
-    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    console.log(currentDay)
-    // Check if current day is within business days (Mon-Fri)
+  const { timeZone = 'Europe/Paris' } = brandSetting;
+  const offDayStart = brandSetting.offDayStart;
+  const offTimeStart = brandSetting.offTimeStart;
+  const offDayEnd = brandSetting.offDayEnd;
+  const offTimeEnd = brandSetting.offTimeEnd;
+
+  // Get current date and time in the specified timezone
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: timeZone,
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+
+  const now = new Date();
+  const parts = formatter.formatToParts(now);
+
+  const currentDay = parts.find(part => part.type === 'weekday').value;
+  const currentHour = parts.find(part => part.type === 'hour').value;
+  const currentMinute = parts.find(part => part.type === 'minute').value;
+
+  const currentTime = `${currentHour}:${currentMinute}`;
+
+  // 🛑 Only check offDays if ALL offDay/offTime values exist
+  if (offDayStart && offTimeStart && offDayEnd && offTimeEnd) {
+    // Turn off during weekends (Sat, Sun)
     if (currentDay === 'Sat' || currentDay === 'Sun') {
-      return false; // Weekend - widget is off
+      return false;
     }
-    
-    // Check if current day is Friday and after closing time
+
+    // Turn off after offTimeStart on offDayStart
     if (currentDay === offDayStart) {
       const [offHour, offMinute] = offTimeStart.split(':');
-      if (parseInt(currentHour) > parseInt(offHour) || 
-          (parseInt(currentHour) === parseInt(offHour) && parseInt(currentMinute) >= parseInt(offMinute))) {
-        return false; // Friday after 5 PM - widget is off
+      if (parseInt(currentHour) > parseInt(offHour) ||
+        (parseInt(currentHour) === parseInt(offHour) && parseInt(currentMinute) >= parseInt(offMinute))) {
+        return false;
       }
     }
-    
-    // Check if current day is Monday and before opening time
+
+    // Turn off before offTimeEnd on offDayEnd
     if (currentDay === offDayEnd) {
       const [onHour, onMinute] = offTimeEnd.split(':');
-      if (parseInt(currentHour) < parseInt(onHour) || 
-          (parseInt(currentHour) === parseInt(onHour) && parseInt(currentMinute) < parseInt(onMinute))) {
-        return false; // Monday before 9 AM - widget is off
+      if (parseInt(currentHour) < parseInt(onHour) ||
+        (parseInt(currentHour) === parseInt(onHour) && parseInt(currentMinute) < parseInt(onMinute))) {
+        return false;
       }
     }
-    
-    // Otherwise, widget is on during business hours
-    return true;
   }
+
+  // Otherwise, widget is visible
+  return true;
+}
 
   // Check if widget should be shown based on day and time
   if (!isVisibleTime(option.brandSetting)) {
