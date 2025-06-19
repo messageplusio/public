@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp Chat Widget Demo</title>
+</head>
+<body style="background-color: #FFFFFF">
+  <h1 style="color: #000000">MessagePlus WhatsApp Chat Widget Demo</h1>
+  <script type="module">
+    import {createWhatsappChatWidget} from "./wawidget.js";
+
+    const options = {
+      enabled: true,
+      autoShow: false,
+      businessSettings: {
+        messageText: 'Hey',
+        phoneNumber: '33634674038',
+        allowedCountries: ['AZ'],
+        timeZone: 'Europe/Paris',
+        offDayStart: 'Fri',
+        offTimeStart: '17:00',
+        offDayEnd: 'Mon',
+        offTimeEnd: '09:00',
+      },
+      displaySettings: {
+//        backgroundColor: 'red',
+        title: 'Book a Whatsapp Demo now',
+        desktopSubtitle: 'Chat with us directly on WhatsApp by scanning the QR code',
+        mobileSubtitle: 'Chat with us directly on WhatsApp by scanning the QR code',
+        ctaTitle: 'Start messaging!',
+        verticalMargin: 24,
+        horizontalMargin: 24,
+        position: 'right'
+      }
+    };
+
+    // Initialize widget
+    createWhatsappChatWidget(options);
+  </script>
+</body>
+</html>
