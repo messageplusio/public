@@ -33,15 +33,16 @@ const setWidgetTexts = (options, isMobile) => {
     const titleElement = document.getElementById("widget-title");
     const subtitleElement = document.getElementById("widget-subtitle");
     const buttonElement = document.getElementById("widget-cta-title");
+    const buttonTextElement = document.getElementById("widget-cta-text");
 
     if (titleElement) titleElement.textContent = options.displaySettings.title;
     if (subtitleElement) subtitleElement.textContent = isMobile ? options.displaySettings.mobileSubtitle : options.displaySettings.desktopSubtitle;
 
-    if (buttonElement) {
+    if (buttonElement && buttonTextElement) {
         const phoneNumber = options.businessSettings.phoneNumber.replace(/\+/g, '');
         const messageText = options.businessSettings.messageText || '';
         buttonElement.href = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${messageText}`;
-        buttonElement.textContent = options.displaySettings.ctaTitle;
+        buttonTextElement.textContent = options.displaySettings.ctaTitle;
     }
 }
 
