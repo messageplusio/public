@@ -31,15 +31,31 @@ const configureWidget = (options, isMobile) => {
 };
 
 const setWidgetTexts = (options, isMobile) => {
+    const toastElement = document.getElementById('wa-widget-toast');
+    const toastTextElement = document.getElementById('wa-widget-toast-title')
     const titleElement = document.getElementById("widget-title");
     const subtitleElement = document.getElementById("widget-subtitle");
     const buttonElement = document.getElementById("widget-cta-title");
     const buttonTextElement = document.getElementById("widget-cta-text");
 
+    if (toastElement && toastTextElement) {
+        if (!options.displaySettings.showToast) {
+            toastElement.remove()
+            return
+        }
+
+        toastTextElement.textContent = options.displaySettings.toastTitle;
+    }
+
     if (titleElement) titleElement.textContent = options.displaySettings.title;
     if (subtitleElement) subtitleElement.textContent = isMobile ? options.displaySettings.mobileSubtitle : options.displaySettings.desktopSubtitle;
 
     if (buttonElement && buttonTextElement) {
+        if (options.displaySettings.showCTA === false) {
+            buttonElement.remove()
+            return
+        }
+
         const phoneNumber = options.businessSettings.phoneNumber.replace(/\+/g, '');
         const messageText = options.businessSettings.messageText || '';
         buttonElement.href = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${messageText}`;
@@ -64,6 +80,7 @@ const setQRCode = (options, isMobile) => {
 
 const toggleChatBox = (autoOpen) => {
     const elements = {
+        toast: document.getElementById('wa-widget-toast'),
         chatBox: document.getElementById('wa-chat-box'),
         mpSvg: document.querySelector('#wa-widget-mp-svg'),
         openedSvg: document.querySelector('#wa-widget-opened-svg'),
@@ -76,6 +93,7 @@ const toggleChatBox = (autoOpen) => {
     const isVisible = elements.chatBox.classList.contains('wa-chat-box-visible');
     const shouldOpen = autoOpen || !isVisible;
 
+    elements.toast.classList.toggle('wa-widget-toast-hidden', shouldOpen)
     elements.chatBox.classList.toggle('wa-chat-box-visible', shouldOpen);
     elements.mpSvg.style.display = shouldOpen ? 'none' : 'block';
     elements.openedSvg.style.display = shouldOpen ? 'block' : 'none';

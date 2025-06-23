@@ -20,10 +20,13 @@ export async function createWhatsappChatWidget(
     },
     displaySettings: {
       backgroundColor: '#25D366',
+      showToast: false,
+      toastTitle: 'Click and chat with us now!',
       title: 'Book our Whatsapp Demo now!',
       desktopSubtitle: 'Chat with us directly on WhatsApp by Scanning the QR code',
       mobileSubtitle: 'Chat with us directly on WhatsApp by Scanning the QR code',
       ctaTitle: 'Start messaging!',
+      showCTA: false,
       verticalMargin: 24,
       horizontalMargin: 24,
       position: 'right'
