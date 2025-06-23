@@ -27,6 +27,7 @@ const configureWidget = (options, isMobile) => {
     }
 
     setWidgetTexts(options, isMobile)
+    setQRCode(options, isMobile)
 };
 
 const setWidgetTexts = (options, isMobile) => {
@@ -43,6 +44,21 @@ const setWidgetTexts = (options, isMobile) => {
         const messageText = options.businessSettings.messageText || '';
         buttonElement.href = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${messageText}`;
         buttonTextElement.textContent = options.displaySettings.ctaTitle;
+    }
+}
+
+const setQRCode = (options, isMobile) => {
+    const qrCodeDiv = document.getElementById('wa-qr-code')
+    const qrCodeImg = document.getElementById('wa-qr-code-img')
+
+    if (options.businessSettings.qrURL && !isMobile) {
+        if (qrCodeDiv && qrCodeImg) {
+            qrCodeImg.src = options.businessSettings.qrURL;
+        }
+    } else {
+        if (qrCodeDiv) {
+            qrCodeDiv.remove()
+        }
     }
 }
 
