@@ -5,6 +5,41 @@
   font-family: 'Inter', sans-serif;
 }
 
+.wa-widget-toast {
+  position: fixed;
+  z-index: 999999999;
+  bottom: calc(var(--margin-bottom, 24px) + 50px + 12px);
+  left: var(--margin-left, auto);
+  right: var(--margin-right, auto);
+
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 8px 16px;
+  border-radius: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 39, 77, 0.08);
+
+  opacity: 1;
+  scale: 1;
+  transition: opacity 0.3s ease-in-out, scale 0.3s ease-in-out;
+
+  p {
+    max-width: 400px;
+    margin: 0;
+    font-size: 14px;
+    line-height: 150%;
+    color: #252525;
+    font-weight: 500;
+  }
+}
+
+.wa-widget-toast-hidden {
+  opacity: 0;
+  scale: 0;
+}
+
 .wa-widget-send-button {
   position: fixed;
   z-index: 999999999;
@@ -105,6 +140,10 @@
   }
 
   a + .caption {
+    margin-top: 12px;
+  }
+
+  p + .caption {
     margin-top: 12px;
   }
 
