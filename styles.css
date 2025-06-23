@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+#whatsapp-chat-widget {
+  display: var(--widget-display, block);
+  font-family: 'Inter', sans-serif;
+}
+
+.wa-widget-send-button {
+  position: fixed;
+  z-index: 999999999;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: var(--button-bg-color);
+  left: var(--margin-left, auto);
+  right: var(--margin-right, auto);
+  bottom: var(--margin-bottom, 24px);
+  transition: transform ease-in-out 0.3s;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.wa-chat-box {
+  position: fixed;
+  z-index: 999999999;
+  bottom: calc(var(--margin-bottom, 24px) + 50px + 12px);
+  left: var(--margin-left, auto);
+  right: var(--margin-right, auto);
+  width: fit-content;
+  max-width: 275px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  padding: 20px
+  ;
+
+  opacity: 0;
+  scale: 0;
+  transition: opacity 0.3s ease-in-out, scale 0.3s ease-in-out;
+
+  .images-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+
+    img:first-of-type {
+      width: 76px;
+      height: 76px;
+    }
+
+    img:last-of-type {
+      height: 40px;
+    }
+  }
+
+  .images-wrapper + h3 {
+    margin-top: 16px;
+  }
+
+  h3 {
+    margin: 0;
+    line-height: 100%;
+    font-size: 16px;
+    letter-spacing: -0.005em;
+    color: #252525;
+    font-weight: 600;
+  }
+
+  h3 + p {
+    margin-top: 8px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 150%;
+    color: #898CA9;
+  }
+
+  p + a {
+    margin-top: 16px;
+  }
+
+  a {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--button-bg-color);
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    line-height: 100%;
+    font-weight: 600;
+  }
+
+  a + .caption {
+    margin-top: 12px;
+  }
+
+  .caption {
+    display: flex;
+    align-content: center;
+    gap: 2px;
+    font-size: 12px;
+    line-height: 100%;
+
+     a {
+       padding: 0;
+       background: none;
+       img {
+         height: 14px;
+       }
+     }
+  }
+}
+
+.wa-chat-box-visible {
+  pointer-events: auto;
+  opacity: 1;
+  scale: 1;
+}
