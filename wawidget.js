@@ -41,7 +41,7 @@ export async function createWhatsappChatWidget(
     if (!whitelistCountry) return; // Stop widget execution if not allowed
   }
 
-  // CHECK TIME VISIBILITY:
+  // CHECK TIME VISIBILITY: 
   // check if widget should be shown based on day and time
   // don't show widget if within off period
   if (!isVisibleTime(options.businessSettings)) return;
