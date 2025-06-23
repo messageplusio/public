@@ -52,3 +52,7 @@ export async function createWhatsappChatWidget(
   // INITIALIZE
   await initWidget(options, window.innerWidth <= 768)
 }
+
+
+// Make the function available globally
+window.createWhatsappChatWidget = createWhatsappChatWidget;
