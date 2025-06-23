@@ -1,7 +1,7 @@
-import {checkUserCountry} from "./geoLocation.js";
-import {isVisibleTime} from "./widgetScheduler.js";
-import {applyStyles} from "./styles.js";
-import {initWidget} from "./widgetRenderer.js";
+import { checkUserCountry } from 'https://cdn.jsdelivr.net/gh/messageplusio/public/geoLocation.js';
+import { isVisibleTime } from 'https://cdn.jsdelivr.net/gh/messageplusio/public/widgetScheduler.js';
+import { applyStyles } from 'https://cdn.jsdelivr.net/gh/messageplusio/public/styles.js';
+import { initWidget } from 'https://cdn.jsdelivr.net/gh/messageplusio/public/widgetRenderer.js';
 
 export async function createWhatsappChatWidget(
   options = {
