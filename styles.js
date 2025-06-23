@@ -1,6 +1,6 @@
 export const applyStyles = async (option) => {
     try {
-        const cssResponse = await fetch('./styles.css', { cache: 'no-store' });
+        const cssResponse = await fetch('https://cdn.jsdelivr.net/gh/messageplusio/public/styles.css', { cache: 'no-store' });
         const cssText = await cssResponse.text();
 
         const cssVariables = getCSSVariables(option);
