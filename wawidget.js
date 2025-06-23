@@ -1,7 +1,7 @@
-import { checkUserCountry } from 'https://cdn.jsdelivr.net/gh/messageplusio/public@latest/geoLocation.js';
-import { isVisibleTime } from 'https://cdn.jsdelivr.net/gh/messageplusio/public@latest/widgetScheduler.js';
-import { applyStyles } from 'https://cdn.jsdelivr.net/gh/messageplusio/public@latest/styles.js';
-import { initWidget } from 'https://cdn.jsdelivr.net/gh/messageplusio/public@latest/widgetRenderer.js';
+import { checkUserCountry } from 'https://cdn.jsdelivr.net/gh/messageplusio/public@v1.0.0/geoLocation.js';
+import { isVisibleTime } from 'https://cdn.jsdelivr.net/gh/messageplusio/public@v1.0.0/widgetScheduler.js';
+import { applyStyles } from 'https://cdn.jsdelivr.net/gh/messageplusio/public@v1.0.0/styles.js';
+import { initWidget } from 'https://cdn.jsdelivr.net/gh/messageplusio/public@v1.0.0/widgetRenderer.js';
 
 export async function createWhatsappChatWidget(
   options = {
