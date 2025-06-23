@@ -16,6 +16,7 @@ export async function createWhatsappChatWidget(
       offTimeStart: '17:00',
       offDayEnd: 'Mon',
       offTimeEnd: '09:00',
+      qrURL: 'https://cdn.jsdelivr.net/gh/messageplusio/public/Ben%20Personal.png'
     },
     displaySettings: {
       backgroundColor: '#25D366',
