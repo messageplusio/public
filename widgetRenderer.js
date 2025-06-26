@@ -51,7 +51,7 @@ const setWidgetTexts = (options, isMobile) => {
     if (subtitleElement) subtitleElement.textContent = isMobile ? options.displaySettings.mobileSubtitle : options.displaySettings.desktopSubtitle;
 
     if (buttonElement && buttonTextElement) {
-        if (options.displaySettings.showCTA === false) {
+        if (options.displaySettings.showCTA === false && !isMobile) {
             buttonElement.remove()
             return
         }
@@ -82,7 +82,6 @@ const toggleChatBox = (autoOpen) => {
     const elements = {
         toast: document.getElementById('wa-widget-toast'),
         chatBox: document.getElementById('wa-chat-box'),
-        mpSvg: document.querySelector('#wa-widget-mp-svg'),
         openedSvg: document.querySelector('#wa-widget-opened-svg'),
         bubble: document.querySelector('.wa-chat-bubble'),
         sendButton: document.querySelector('.wa-widget-send-button')
@@ -95,7 +94,6 @@ const toggleChatBox = (autoOpen) => {
 
     elements.toast.classList.toggle('wa-widget-toast-hidden', shouldOpen)
     elements.chatBox.classList.toggle('wa-chat-box-visible', shouldOpen);
-    elements.mpSvg.style.display = shouldOpen ? 'none' : 'block';
     elements.openedSvg.style.display = shouldOpen ? 'block' : 'none';
     elements.bubble.style.cssText = shouldOpen ? 'display: none;' : '';
     elements.sendButton.className = `wa-widget-send-button${shouldOpen ? ' wa-widget-send-button-clicked' : ''}`;
