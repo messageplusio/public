@@ -1,12 +1,14 @@
-import { checkUserCountry } from 'https://cdn.jsdelivr.net/gh/messageplusio/public/geoLocation.js';
-import { isVisibleTime } from 'https://cdn.jsdelivr.net/gh/messageplusio/public/widgetScheduler.js';
-import { applyStyles } from 'https://cdn.jsdelivr.net/gh/messageplusio/public/styles.js';
-import { initWidget } from 'https://cdn.jsdelivr.net/gh/messageplusio/public/widgetRenderer.js';
+import { checkUserCountry } from './geoLocation.js';
+import { isVisibleTime } from './widgetScheduler.js';
+import { applyStyles } from './styles.js';
+import { initWidget } from './widgetRenderer.js';
+import { detectLocale } from './detectLocale.js';
 
 export async function createWhatsappChatWidget(
   options = {
     enabled: false,
     autoShow: true,
+    defaultLocale: 'en',
     businessSettings: {
       messageText: 'Hey',
       phoneNumber: '33634674038',
@@ -26,6 +28,7 @@ export async function createWhatsappChatWidget(
       desktopSubtitle: 'Chat with us directly on WhatsApp by Scanning the QR code',
       mobileSubtitle: 'Chat with us directly on WhatsApp by Scanning the QR code',
       ctaTitle: 'Start messaging!',
+      translations: {},
       showCTA: false,
       verticalMargin: 24,
       horizontalMargin: 24,
@@ -45,6 +48,10 @@ export async function createWhatsappChatWidget(
   // check if widget should be shown based on day and time
   // don't show widget if within off period
   if (!isVisibleTime(options.businessSettings)) return;
+
+  // APPLY LOCALE
+  const detectedLocale = detectLocale(options)
+  options.defaultLocale = detectedLocale
 
   // APPLY CSS
   await applyStyles(options)
