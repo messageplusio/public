@@ -79,7 +79,6 @@ const setQRCode = (options, isMobile) => {
 }
 
 const toggleChatBox = (autoOpen) => {
-<<<<<<< Updated upstream
   const elements = {
     toast: document.getElementById('wa-widget-toast'),
     chatBox: document.getElementById('wa-chat-box'),
