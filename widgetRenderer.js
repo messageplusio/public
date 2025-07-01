@@ -44,11 +44,11 @@ const setWidgetTexts = (options, isMobile) => {
       return
     }
 
-    toastTextElement.textContent = options.displaySettings.translations ? options.displaySettings.translations[options.defaultLocale].toastTitle : options.displaySettings.toastTitle;
+    toastTextElement.textContent = options.displaySettings.translations[options.locale].toastTitle
   }
 
-  if (titleElement) titleElement.textContent = options.displaySettings.translations ? options.displaySettings.translations[options.defaultLocale].title : options.displaySettings.title;
-  if (subtitleElement) subtitleElement.textContent = isMobile ? (options.displaySettings.translations ? options.displaySettings.translations[options.defaultLocale].mobileSubtitle : options.displaySettings.mobileSubtitle) : (options.displaySettings.translations ? options.displaySettings.translations[options.defaultLocale].desktopSubtitle : options.displaySettings.desktopSubtitle);
+  if (titleElement) titleElement.textContent = options.displaySettings.translations[options.locale].title
+  if (subtitleElement) subtitleElement.textContent = isMobile ? options.displaySettings.translations[options.locale].mobileSubtitle : options.displaySettings.translations[options.locale].desktopSubtitle
 
   if (buttonElement && buttonTextElement) {
     if (options.displaySettings.showCTA === false && !isMobile) {
@@ -57,9 +57,9 @@ const setWidgetTexts = (options, isMobile) => {
     }
 
     const phoneNumber = options.businessSettings.phoneNumber.replace(/\+/g, '');
-    const messageText = options.businessSettings.messageText || '';
+    const messageText = options.businessSettings.translations[options.locale].message || '';
     buttonElement.href = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${messageText}`;
-    buttonTextElement.textContent = options.displaySettings.translations ? options.displaySettings.translations[options.defaultLocale].ctaTitle : options.displaySettings.ctaTitle;
+    buttonTextElement.textContent = options.displaySettings.translations[options.locale].ctaTitle
   }
 }
 
@@ -67,9 +67,9 @@ const setQRCode = (options, isMobile) => {
   const qrCodeDiv = document.getElementById('wa-qr-code')
   const qrCodeImg = document.getElementById('wa-qr-code-img')
 
-  if (options.businessSettings.qrURL && !isMobile) {
+  if (options.businessSettings.translations[options.locale].qrURL && !isMobile) {
     if (qrCodeDiv && qrCodeImg) {
-      qrCodeImg.src = options.businessSettings.qrURL;
+      qrCodeImg.src = options.businessSettings.translations[options.locale].qrURL;
     }
   } else {
     if (qrCodeDiv) {

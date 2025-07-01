@@ -12,7 +12,17 @@
   <script type="module">
     import {createWhatsappChatWidget} from "./wawidget.js";
 
-    const translations = {
+    const businessTranslations = {
+      en: {
+        message: 'Hey',
+        qrURL: 'https://cdn.jsdelivr.net/gh/messageplusio/public/Ben%20Personal.png'
+      },
+      ru: {
+        message: 'Привет',
+        qrURL: 'https://cdn.jsdelivr.net/gh/messageplusio/public/Ben%20Personal.png'
+      }
+    }
+    const displayTranslations = {
       en: {
         toastTitle: "Click below to message us!",
         title: "Book a Whatsapp Demo",
@@ -32,8 +42,9 @@
     const options = {
       enabled: true,
       autoShow: false,
+      locale: 'en',
       businessSettings: {
-        messageText: 'Hey',
+        translations: businessTranslations,
         phoneNumber: '33634674038',
         allowedCountries: ['AZ'],
         timeZone: 'Europe/Paris',
@@ -41,16 +52,10 @@
         offTimeStart: '17:00',
         offDayEnd: 'Mon',
         offTimeEnd: '09:00',
-        qrURL: 'https://cdn.jsdelivr.net/gh/messageplusio/public/Ben%20Personal.png'
       },
       displaySettings: {
         showToast: true,
-        toastTitle: 'Click here and message us now!',
-        title: 'Book a Whatsapp Demo now',
-        desktopSubtitle: 'Chat with us directly on WhatsApp by scanning the QR code',
-        mobileSubtitle: 'Chat with us directly on WhatsApp by scanning the QR code',
-        ctaTitle: 'Start messaging!',
-        translations: translations,
+        translations: displayTranslations,
         verticalMargin: 24,
         horizontalMargin: 24,
         position: 'right'

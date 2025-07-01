@@ -8,9 +8,9 @@ export async function createWhatsappChatWidget(
   options = {
     enabled: false,
     autoShow: true,
-    defaultLocale: 'en',
+    locale: 'en',
     businessSettings: {
-      messageText: 'Hey',
+      translations: {},
       phoneNumber: '33634674038',
       allowedCountries: ['FR', 'AZ'],
       timeZone: 'Europe/Paris',
@@ -18,16 +18,10 @@ export async function createWhatsappChatWidget(
       offTimeStart: '17:00',
       offDayEnd: 'Mon',
       offTimeEnd: '09:00',
-      qrURL: 'https://cdn.jsdelivr.net/gh/messageplusio/public/Ben%20Personal.png'
     },
     displaySettings: {
       backgroundColor: '#25D366',
       showToast: false,
-      toastTitle: 'Click and chat with us now!',
-      title: 'Book our Whatsapp Demo now!',
-      desktopSubtitle: 'Chat with us directly on WhatsApp by Scanning the QR code',
-      mobileSubtitle: 'Chat with us directly on WhatsApp by Scanning the QR code',
-      ctaTitle: 'Start messaging!',
       translations: {},
       showCTA: false,
       verticalMargin: 24,
@@ -51,7 +45,7 @@ export async function createWhatsappChatWidget(
 
   // APPLY LOCALE
   const detectedLocale = detectLocale(options)
-  options.defaultLocale = detectedLocale
+  options.locale = detectedLocale
 
   // APPLY CSS
   await applyStyles(options)
