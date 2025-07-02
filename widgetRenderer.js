@@ -2,7 +2,7 @@ export const initWidget = async (options, isMobile) => {
   // message text replace alls
   processMessageText(options)
 
-  const htmlResponse = await fetch('https://cdn.jsdelivr.net/gh/messageplusio/public/widget.html', { cache: 'no-store' });
+  const htmlResponse = await fetch('https://wawidgetstorage.blob.core.windows.net/widget-assets/widget.html', { cache: 'no-store' });
   const htmlText = await htmlResponse.text();
 
   document.body.insertAdjacentHTML('beforeend', htmlText);

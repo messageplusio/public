@@ -1,8 +1,8 @@
-import { checkUserCountry } from './geoLocation.js';
-import { isVisibleTime } from './widgetScheduler.js';
-import { applyStyles } from './styles.js';
-import { initWidget } from './widgetRenderer.js';
-import { detectLocale } from './detectLocale.js';
+import { checkUserCountry } from 'https://wawidgetstorage.blob.core.windows.net/widget-assets/geoLocation.js';
+import { isVisibleTime } from 'https://wawidgetstorage.blob.core.windows.net/widget-assets/widgetScheduler.js';
+import { applyStyles } from 'https://wawidgetstorage.blob.core.windows.net/widget-assets/styles.js';
+import { initWidget } from 'https://wawidgetstorage.blob.core.windows.net/widget-assets/widgetRenderer.js';
+import { detectLocale } from 'https://wawidgetstorage.blob.core.windows.net/widget-assets/detectLocale.js';
 
 export async function createWhatsappChatWidget(
   options = {
