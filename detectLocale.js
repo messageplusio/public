@@ -1,5 +1,5 @@
 export const detectLocale = (options) => {
-  let locale = 'en'
+  let locale = "en";
 
   // 3 possible locales
   // I. example.com/ru
@@ -8,29 +8,34 @@ export const detectLocale = (options) => {
   // IV. fallback to browser
 
   // I.
-  const pathMatch = window.location.pathname.match(/\/([a-z]{2})(\/|$)/)
+  const pathMatch = window.location.pathname.match(/\/([a-z]{2})(\/|$)/);
   if (pathMatch) {
-    locale = pathMatch[1]
+    locale = pathMatch[1];
   }
 
   // II.
-  const subDomainMatch = window.location.hostname.match(/^([a-z]{2})\./)
+  const subDomainMatch = window.location.hostname.match(/^([a-z]{2})\./);
   if (subDomainMatch) {
-    locale = subDomainMatch[1]
+    locale = subDomainMatch[1];
   }
 
   // III.
-  const urlParams = new URLSearchParams(window.location.search)
-  const langParams = urlParams.get('lang')
+  const urlParams = new URLSearchParams(window.location.search);
+  const langParams = urlParams.get("lang");
   if (langParams) {
-    locale = langParams
+    locale = langParams;
   }
 
   // IV
-  if (options.displaySettings.translations && !options.displaySettings.translations[locale]) {
-    const browserLang = navigator.language.split('-')[0]
-    locale = options.displaySettings.translations[browserLang] ? browserLang : 'en'
+  if (
+    options.displaySettings.translations &&
+    !options.displaySettings.translations[locale]
+  ) {
+    const browserLang = navigator.language.split("-")[0];
+    locale = options.displaySettings.translations[browserLang]
+      ? browserLang
+      : "en";
   }
 
-  return locale
-}
+  return locale;
+};
